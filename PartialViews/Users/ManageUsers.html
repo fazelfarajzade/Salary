@@ -1,0 +1,142 @@
+﻿<div id="partialviews-Users" class="page">
+    <div class="header">
+        <h1 class="view-current-title">لیست کاربران</h1>
+        <div id="navigationBar"></div>
+        <div class="view-action-buttons">
+            <button class="formElement add" id="btnAddUser" onclick="addUser()">کاربر جدید</button>
+        </div>
+    </div>
+    <div class="pageContent">
+        <table>
+            <tr>
+                <td class="labelCell">کد ملی شخص را وارد کنید:</td>
+                <td><input maxlength="10" type="text" id="txtNationalCode" class="formElement ltr" style="width: 100%;" /></td>
+                <td><button class="formElement search" id="btnSearch" style="width: 100%;height: 44px;">جستجو</button></td>
+            </tr>
+        </table>
+        <div id="dvUsersList"></div>
+        <div class="inlineButtons">
+            <button class="formElement disabledBox edit" id="btnEditUser" onclick="editUser()">ویرایش کاربر</button>
+            <button class="formElement disabledBox delete" id="btnDeleteUser" onclick="deleteUser()">حذف کاربر</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var selectedRowJSON;
+    var root = document.querySelector('#partialviews-Users');
+    var dvUsersList = root.querySelector('#dvUsersList'),
+
+        btnSearch = root.querySelector('#btnSearch'),
+        txtNationalCode = root.querySelector('#txtNationalCode'),
+        btnEditUser = root.querySelector('#btnEditUser'),
+        btnDeleteUser = root.querySelector('#btnDeleteUser'),
+        btnAddUser = root.querySelector('#btnAddUser'),
+        Users = null;
+    showNavBar(root);
+    function fillUsersTable(users) {
+        if (users.length > 0) {
+            dvUsersList.innerHTML = "";
+            var mapping = {
+                id: "کد کاربر",
+                NationalCode: "کد ملی",
+                Name: "نام",
+                Family: "نام خانوادگی",
+            }
+            var gridObj = new DataGrid(users, mapping, {}, {}, tr => {
+                selectedRowJSON = JSON.parse(tr.getAttribute('jsondata'));
+                btnDeleteUser.classList.remove("disabledBox");
+                btnEditUser.classList.remove("disabledBox");
+            });
+            dvUsersList.appendChild(gridObj.getTable());
+            dvUsersList.querySelectorAll('tr').forEach(tr => {
+                tr.ondblclick = () => { btnEditUser.click(); };
+            });
+        } else {
+            dvUsersList.innerHTML = " کاربری قبلا ایجاد نشده است.";
+        }
+    }
+    btnSearch.onclick = function () {
+        var nationalCode = txtNationalCode.value;
+        if (nationalCode && !checkNatinalCode(nationalCode)) {
+            alert("کد ملی صحیح نیست.", "خطا", {
+                type: "error",
+                confirmCallBack: () => {
+                    root.querySelector("#txtNationalCode").focus();
+                }
+            });
+            return;
+        }
+        var data = {};
+        if (nationalCode)
+            data.NationalCode = nationalCode;
+        //callService("Account/Get", data).then(AccountsResponse => {
+        //    Accounts = AccountsResponse.Accounts;
+        //    dvAccountsList.innerHTML = "";
+        //    fillAccountTable(Accounts);
+        //});
+    }
+    function populateUsers(users) {
+        Users = users;
+        fillUsersTable(Users);
+    }
+
+    function addUser() {
+        loadPartialView(PartialViewTemplates.Users.AddUser);
+    }
+    function editUser() {
+        var User = selectedRowJSON;
+        loadPartialView(PartialViewTemplates.Users.AddUser, { "User": User });
+    }
+    function sendDeleteUserRequest() {
+        var User = selectedRowJSON;
+        var createRequest = callService("User/DeleteUser", { UserID: User.UserID });
+        createRequest.then(res => {
+            alert("کاربر انتخابی حذف شد.", "عملیات موفق"
+                , {
+                    type: "success",
+                    confirmCallBack: () => {
+                        loadPartialView(PartialViewTemplates.Users.ManageUsers, null, null, true);
+                    }
+                });
+        }).catch(err => {
+            console.log(err);
+            if (err.includes("conflicted with the REFERENCE")) {
+                alert("به این کاربر ارجاعاتی شده که حذف آن را غیر ممکن میکند.", "خطا", { type: "error" });
+            } else {
+                alert(err, "خطا", { type: "error" });
+            }
+        });New
+    }
+    function deleteUser() {
+        alert(
+            "ایا اطمینان دارید میخواهید این کاربر را از لیست کاربران پاک کنید؟<br>"
+            + "توجه داشته باشید که بازگردانی اطلاعات پاک شده ممکن نیست.",
+            "اخطار",
+            {
+                type: "warning",
+                confirmCallBack: sendDeleteUserRequest,
+                confirmText: "تایید",
+                cancel: true
+            }
+        );
+    }
+    //callService("Users/GetUsers").then(UsersResponse => {
+    //    populateUsers(UsersResponse.users);
+    //});
+    var tempUsers = [
+        {
+            id: "1",
+            NationalCode: "9999999999",
+            Name: "مهدی",
+            Family: "پور حبیب",
+        },
+        {
+            id: "2",
+            NationalCode: "8888888888",
+            Name: "امین",
+            Family: "فرج زاده",
+        },
+    ]
+    populateUsers(tempUsers);
+</script>
