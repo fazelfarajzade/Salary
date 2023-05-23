@@ -1,0 +1,72 @@
+﻿<div id="dialogPartial-AccDetails" class="dialogPartial">
+    <h2 id="hTitle"></h2>
+    <h3>هزینه ها</h3>
+    <div id="dvDebts"></div>
+    <h3>پرداختی ها</h3>
+    <div id="dvPayments"></div>
+    <h3 id="hSum"></h3>
+    <div class="inlineButtons">
+        <button class="formElement add" id="btnPrint" onclick="window.print()">چاپ</button>
+        <button class="formElement delete" onclick="closeDialog()">انصراف</button>
+    </div>
+</div>
+<style>
+    @media print {
+        .dialogBody {
+            background-color: white;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: -10%;
+        }
+    }
+</style>
+<script type="text/javascript">
+    (() => {
+        const root = document.querySelector("#dialogPartial-AccDetails");
+        const hTitle = root.querySelector("#hTitle"),
+            dvDebts = root.querySelector("#dvDebts"),
+            dvPayments = root.querySelector("#dvPayments"),
+            hSum = root.querySelector("#hSum"),
+            btnPrint = root.querySelector("#btnPrint");
+
+
+        const thisDialogData = { ...DialogData };
+        let user = null;
+        let branch = null;
+
+        function populateAccDetails() {
+            hTitle.innerHTML = `گزارش حقوق و دستمزد ${thisDialogData.monthStr}  ماه ${thisDialogData.year} کاربر ${user.name} ${user.family} شعبه ${branch.branchName}`;
+            // Debts
+            const debtMapping = {
+                debtId: "شناسه",
+                description: "شرح",
+                debtPersianName: "نوع",
+                amountStr: "مبلغ",
+            }
+            const gridDebtObj = new DataGrid(thisDialogData.debts, debtMapping, {}, {}, tr => { });
+            dvDebts.appendChild(gridDebtObj.getTable());
+            // Payments
+            const paymentMapping = {
+                paymentId: "شناسه",
+                description: "شرح",
+                debtPersianName: "نوع",
+                amountStr: "مبلغ",
+            }
+            const gridPaymentObj = new DataGrid(thisDialogData.payments, paymentMapping, {}, {}, tr => { });
+            dvPayments.appendChild(gridPaymentObj.getTable());
+            // Sum
+            hSum.innerHTML = "مجموع قایل پرداخت: " + thisDialogData.payableStr;
+        }
+        callService("Users/" + thisDialogData.userId, {}, "get")
+            .then(userRes => {
+                user = userRes;
+                callService("Branchs/" + user.branchId, {}, "get")
+                    .then(branchRes => {
+                        branch = branchRes;
+                        populateAccDetails();
+                    });
+            });
+    })();
+</script>

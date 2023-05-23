@@ -1,0 +1,151 @@
+﻿<div id="partialviews-AddSalary" class="page">
+    <div class="header">
+        <h1 class="view-current-title">ایجاد بازه جدید</h1>
+        <div id="navigationBar"></div>
+        <div class="view-action-buttons">
+        </div>
+    </div>
+    <div class="pageContent">
+        <table>
+            <tr>
+                <td class="labelCell">مبلغ:</td>
+                <td colspan="2">
+                    <input type="tel" dir="ltr" id="txtAmount" class="formElement" />
+                </td>
+            </tr>
+            <tr>
+                <td class="labelCell">از: </td>
+                <td>
+                    سال
+                    <input type="tel" maxlength="4" dir="ltr" id="txtYearFrom" class="formElement" />
+                    <br>
+                    ماه
+                    <input type="tel" maxlength="2" dir="ltr" id="txtMonthFrom" class="formElement" />
+                </td>
+                <td class="labelCell">تا: </td>
+                <td>
+                    سال
+                    <input type="tel" maxlength="4" dir="ltr" id="txtYearTo" class="formElement" />
+                    <br>
+                    ماه
+                    <input type="tel" maxlength="2" dir="ltr" id="txtMonthTo" class="formElement" />
+                </td>
+            </tr>
+        </table>
+        <div class="inlineButtons">
+            <button class="formElement add" id="btnSaveSalary">ذخیره بازه</button>
+            <button class="formElement edit" id="btnEditSalary" style="display: none;">ویرایش بازه</button>
+            <button class="formElement delete" onclick="loadLastPartial()">انصراف</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var root = document.querySelector("#partialviews-AddSalary"),
+        txtAmount = root.querySelector('#txtAmount'),
+        txtYearFrom = root.querySelector('#txtYearFrom'),
+        txtMonthFrom = root.querySelector('#txtMonthFrom'),
+        txtYearTo = root.querySelector('#txtYearTo'),
+        txtMonthTo = root.querySelector('#txtMonthTo'),
+        btnSaveSalary = root.querySelector('#btnSaveSalary'),
+        btnEditSalary = root.querySelector('#btnEditSalary'),
+        User = null;
+        Salary = null;
+    showNavBar(root);
+    txtAmount.toMoney();
+    setDigitsAllowed(txtYearFrom);
+    setDigitsAllowed(txtMonthFrom);
+    setDigitsAllowed(txtYearTo);
+    setDigitsAllowed(txtYearFrom);
+
+    function getData() {
+        return new Promise((resolve, reject) => {
+            if (!txtAmount.value) {
+                alert("مبلغ بازه حقوقی را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+                return reject();
+            }
+            if (!txtYearFrom.value) {
+                alert("سال شروع بازه حقوقی را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtYearFrom.focus(); } });
+                return reject();
+            }
+            if (!txtMonthFrom.value) {
+                alert("ماه شروع بازه حقوقی را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtMonthFrom.focus(); } });
+                return reject();
+            }
+            if (!txtYearTo.value) {
+                alert("سال پایان بازه حقوقی را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtYearTo.focus(); } });
+                return reject();
+            }
+            if (!txtMonthTo.value) {
+                alert("ماه پایان بازه حقوقی را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtMonthTo.focus(); } });
+                return reject();
+            }
+
+            var data = {
+                Amount: txtAmount.value.replaceAll(",", ""),
+                YearFrom: txtYearFrom.value,
+                MonthFrom: txtMonthFrom.value,
+                YearTo: txtYearTo.value,
+                MonthTo: txtMonthTo.value,
+                UserId: document.params.user.userId,
+
+            }
+            return resolve(data);
+        });
+    }
+
+    function fillForm(salary) {
+        txtAmount.value = salary.amount;
+        txtYearFrom.value = salary.yearFrom;
+        txtMonthFrom.value = salary.monthFrom;
+        txtYearTo.value = salary.yearTo;
+        txtMonthTo.value = salary.monthTo;
+    }
+
+    async function save(edit = false) {
+        var data = await getData();
+        if (!data) {
+            return false;
+        }
+        var createRequest = callService("Salaries" + (edit ? `/${Salary.salaryId}` : ""), data, (edit ? "put" : "post"));
+        createRequest.then(res => {
+            var successMessage = edit ? "بازه ویرایش شد" : "بازه با موفقیت ایجاد شد"
+            alert(successMessage, "عملیات موفق"
+                , {
+                    type: "success",
+                    confirmCallBack: () => {
+                        loadLastPartial();
+                    }
+                });
+        }).catch(err => {
+            console.log(err);
+            alert(err.message, "خطا", { type: "error" });
+        });
+    }
+    function populateAddOrEditSalary() {
+        User = document.params.user;
+        btnSaveSalary.onclick = () => {
+            save();
+        }
+        txtAmount.focus();
+        var focusOrder = [txtAmount, txtYearFrom, txtYearTo, txtMonthFrom, txtMonthTo];
+        if (document.params && document.params.salary) {
+            focusOrder.push([btnEditSalary, true]);
+            Salary = document.params.salary;
+            btnEditSalary.style.display = "inline-block";
+            btnSaveSalary.style.display = "none";
+            btnEditSalary.onclick = () => {
+                save(true);
+            }
+
+            setTimeout(() => {
+                fillForm(Salary);
+            }, 0);
+        }
+        else {
+            focusOrder.push([btnSaveSalary, true]);
+        }
+        ApplyFocusOnKeyPress(focusOrder);
+    }
+    populateAddOrEditSalary();
+</script>

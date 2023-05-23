@@ -1,0 +1,197 @@
+﻿<div id="partialviews-ManageAccAccount" class="page">
+    <div class="header">
+        <h1 class="view-current-title">مدیریت حساب کاربر</h1>
+        <div id="navigationBar"></div>
+    </div>
+    <div class="pageContent">
+        <table>
+            <tr>
+                <td class="labelCell">از سال:</td>
+                <td><input type="tel" maxlength="4" dir="ltr" id="txtYear" class="formElement" style="width: 100%;" /></td>
+                <td><button class="formElement search" id="btnSearch" style="width: 100%;height: 44px;">جستجو</button></td>
+            </tr>
+        </table>
+        <div id="dvAccList"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var root = document.querySelector('#partialviews-ManageAccAccount');
+    var selectedRowJSON = null;
+    var dvAccList = root.querySelector('#dvAccList'),
+        txtYear = root.querySelector('#txtYear'),
+        btnSearch = root.querySelector('#btnSearch'),
+        Debts = null;
+    Payments = null;
+    Salaries = null;
+    showNavBar(root);
+    var Months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+    //var filteredDebts = {};
+    //var filteredPayments = {};
+    function fillAccsTable() {
+        //filteredDebts = {};
+        //filteredPayments = {};
+        //Debts.forEach(debt => {
+        //    var debtDate = debt.debtDate.split("/");
+        //    debtDate = debtDate.map(x => parseInt(x));
+        //    if (!filteredDebts[debtDate[0]])
+        //        filteredDebts[debtDate[0]] = {};
+        //    if (!filteredDebts[debtDate[0]][debtDate[1]])
+        //        filteredDebts[debtDate[0]][debtDate[1]] = [];
+        //    filteredDebts[debtDate[0]][debtDate[1]].push(debt);
+        //});
+        //Payments.forEach(payment => {
+        //    var paymentDate = payment.paymentDate.split("/");
+        //    paymentDate = paymentDate.map(x => parseInt(x));
+        //    if (!filteredPayments[paymentDate[0]])
+        //        filteredPayments[paymentDate[0]] = {};
+        //    if (!filteredPayments[paymentDate[0]][paymentDate[1]])
+        //        filteredPayments[paymentDate[0]][paymentDate[1]] = [];
+        //    filteredPayments[paymentDate[0]][paymentDate[1]].push(payment);
+        //});
+        dvAccList.innerHTML = "";
+        if (Salaries.length > 0) {
+            dvAccList.innerHTML = "";
+            var mapping = {
+                year: "سال",
+                monthStr: "ماه",
+                payableStr: "قابل پرداخت",
+                actions: "عملیات",
+            }
+            var accs = [];
+            Salaries.forEach(salary => {
+                var year = salary.yearFrom;
+                while (year <= salary.yearTo) {
+                    var month = salary.monthFrom;
+                    while (month <= salary.monthTo || month <= 12) {
+                        var payable = salary.amount;
+                        //if (filteredPayments[year] && filteredPayments[year][month]) {
+                        //    filteredPayments[year][month].forEach(x => {
+                        //        payable = payable - x.amount;
+                        //    });
+                        ////}
+                        //if (filteredDebts[year] && filteredDebts[year][month]) {
+                        //    filteredDebts[year][month].forEach(x => {
+                        //        payable = payable - x.amount;
+                        //    });
+                        //}
+                        let filteredDebts = Debts.filter(d => d.debtYear == year && d.debtMonth == month);
+                        filteredDebts = filteredDebts.map(x => {
+                            payable = payable - x.amount;
+                            x.amountStr = x.amount.toString().toMoney();
+                            x.debtPersianName = getDebtTypePersianName(x.type);
+                            return x;
+                        });
+                        let filteredPayments = Payments.filter(p => p.paymentYear == year && p.paymentMonth == month);
+                        filteredPayments = filteredPayments.map(x => {
+                            if (x.type == "SALARY" || x.type == "OTHER")
+                                payable = payable - x.amount;
+                            x.amountStr = x.amount.toString().toMoney();
+                            x.debtPersianName = getPaymentTypePersianName(x.type);
+                            return x;
+                        });
+                        accs.push(
+                            {
+                                year: year,
+                                month: month,
+                                monthStr: Months[month - 1],
+                                payable: payable,
+                                payableStr: payable.toString().toMoney(),
+                                debts: filteredDebts,
+                                payments: filteredPayments,
+                                userId: document.params.user.userId,
+                                actions: ""
+                            });
+                        month++;
+                    }
+
+                    year++;
+                }
+            });
+            accs = accs.map(x => {
+
+
+
+                var parent = document.createElement("div");
+
+
+                var btnDetails = document.createElement("button");
+                btnDetails.className = "formElement";
+                btnDetails.innerHTML = "مشاهده و چاپ جزئیات";
+                parent.appendChild(btnDetails);
+
+                if (x.payable > 0) {
+                    var btnSalaryPayment = document.createElement("button");
+                    btnSalaryPayment.className = "formElement";
+                    btnSalaryPayment.innerHTML = "ثبت پرداخت";
+                    parent.appendChild(btnSalaryPayment);
+
+                    var btnManageDebts = document.createElement("button");
+                    btnManageDebts.className = "formElement";
+                    btnManageDebts.innerHTML = "ثبت هزینه";
+                    parent.appendChild(btnManageDebts);
+
+
+                    btnSalaryPayment.addEventListener("click", () => {
+                        //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
+                        DialogData = x;
+                        x.oncloseCallBack = () => {
+                            search(x.year);
+                        }
+                        showDialog("PartialViews/Modals/AddPayment.html", "ثبت پرداخت", { url: true })
+                    });
+                    btnManageDebts.addEventListener("click", () => {
+                        //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
+                        DialogData = x;
+                        x.oncloseCallBack = () => {
+                            search(x.year);
+                        }
+                        showDialog("PartialViews/Modals/AddDebt.html", "ثبت هزینه", { url: true })
+                    });
+                }
+                btnDetails.addEventListener("click", () => {
+                    DialogData = x;
+                    showDialog("PartialViews/Modals/AccDetails.html", "گزارش حقوق و دستمزد", { url: true })
+                });
+
+
+                x.actions = parent;
+
+                return x;
+            });
+
+            var gridObj = new DataGrid(accs, mapping, {}, {}, tr => {
+                selectedRowJSON = JSON.parse(tr.getAttribute('jsondata'));
+            });
+            dvAccList.appendChild(gridObj.getTable());
+        } else {
+            dvAccList.innerHTML = "حقوق کاربر مشخص نشده است.";
+        }
+    }
+    function showInsertPaymentDialog(userId, year, month) {
+
+    }
+    btnSearch.onclick = () => {
+        search(txtYear.value);
+    };
+
+    function search(year) {
+        if (!year)
+            return;
+        var names = [
+            `Users/${document.params.user.userId}/Salaries?year=${year}`,
+            `Users/${document.params.user.userId}/Payments?year=${year}`,
+            `Users/${document.params.user.userId}/Debts?year=${year}`,
+        ];
+        callServices(names, [{}, {}, {}], "get")
+            .then((res) => {
+                Salaries = res[0];
+                Payments = res[1];
+                Debts = res[2];
+                fillAccsTable();
+            });
+    }
+
+
+</script>
