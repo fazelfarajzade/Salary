@@ -38,13 +38,12 @@ namespace Salary.API.Core.Repository
         }
         public async Task<int> InsertLoan(Loan loan, IEnumerable<Debt> installments)
         {
-            //var query = "SELECT * FROM Salaries";
             var loanId = 0;
             using (var connection = _context.CreateConnection())
             {
                 //var loanId = await connection.InsertAsync<Loan>(loan);
                 //return loanId;
-                
+                connection.Open();
                 using (var transaction = connection.BeginTransaction())
                 {
                     try
@@ -55,16 +54,19 @@ namespace Salary.API.Core.Repository
                         // Insert the debt records
                         foreach (var installment in installments)
                         {
+                            installment.DebtReferenceId = loanId;
                             await _debtRepo.InsertDebt(installment);   
                         }
 
                         // Commit the transaction
                         transaction.Commit();
+                        connection.Close();
                     }
                     catch (Exception ex)
                     {
                         // Handle any exceptions and roll back the transaction if necessary
                         transaction.Rollback();
+                        connection.Close();
                         throw new Exception(ex.Message);
                     }
                 }
@@ -77,9 +79,28 @@ namespace Salary.API.Core.Repository
             var loan = new Loan() { LoanId = Id };
             using (var connection = _context.CreateConnection())
             {
-                var deleted = await connection.DeleteAsync<Loan>(loan);
-                return deleted;
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        var sql = $"DELETE FROM Debts WHERE {nameof(Debt.DebtReferenceType)} = {(int)Debt.DebtReferenceTypes.LOAN} and {nameof(Debt.DebtReferenceId)} = @Id";
+                        await connection.ExecuteAsync(sql, new { Id }, transaction);
+                        await connection.DeleteAsync<Loan>(loan, transaction);
+                        // Commit the transaction
+                        transaction.Commit();
+                        connection.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions and roll back the transaction if necessary
+                        transaction.Rollback();
+                        connection.Close();
+                        throw new Exception(ex.Message);
+                    }
+                }
             }
+            return true;
         }
     }
 }

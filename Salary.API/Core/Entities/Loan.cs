@@ -11,7 +11,10 @@ namespace Salary.API.Core.Entities
         public int LoanId { get; set; }
         public int UserId { get; set; }
         public string Description { get; set; } = string.Empty;
-        public DateTime PaymentDateTime { get; set; }
+        [Required]
+        public int Year { get; set; }
+        [Required]
+        public int Month { get; set; }
         [Required]
         public decimal Amount { get; set; }
         [Required]

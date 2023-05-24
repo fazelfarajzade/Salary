@@ -13,6 +13,10 @@ namespace Salary.API.Core.Entities
             VACATION = 3,
             OTHER = 10,
         }
+        public enum DebtReferenceTypes
+        {
+            LOAN = 1,
+        }
         [Dapper.Contrib.Extensions.Key]
         public int DebtId { get; set; }
         [Required]
@@ -27,6 +31,8 @@ namespace Salary.API.Core.Entities
         public int DebtYear { get; set; }
         [Required]
         public int DebtMonth { get; set; }
+        public DebtReferenceTypes? DebtReferenceType { get; set; }
+        public int? DebtReferenceId { get; set; }
 
     }
 }

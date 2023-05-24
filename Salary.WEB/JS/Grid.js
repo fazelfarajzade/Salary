@@ -260,6 +260,7 @@
                 callback(tr);
             }
         }
+        
         return tr;
     }
 }

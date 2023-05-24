@@ -92,7 +92,7 @@
                     });
             }).catch(err => {
                 console.log(err);
-                alert(err.message, "خطا", { type: "error" });
+                alert(err.message || err, "خطا", { type: "error" });
             });
     }
     function populateAddOrEditUser() {

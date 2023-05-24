@@ -85,7 +85,7 @@ namespace Salary.API.Core.Repository
             var query = $"SELECT * FROM Loans where {nameof(User.UserId)} = @id";
             if (year != null)
             {
-                query += $" and {nameof(Loan.PaymentDateTime)} >= @year and {nameof(Loan.PaymentDateTime)} < (@year + 1) ";
+                query += $" and {nameof(Loan.Year)} = @year";
             }
             using (var connection = _context.CreateConnection())
             {

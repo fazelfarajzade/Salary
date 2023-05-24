@@ -1,4 +1,5 @@
 ﻿<div id="dialogPartial-AddDebt" class="dialogPartial">
+    <div id="dvDataList"></div>
     <table>
         <tr>
             <td class="labelCell">نوع هزینه:</td>
@@ -30,6 +31,7 @@
 <script type="text/javascript">
     (() => {
         const root = document.querySelector("#dialogPartial-AddDebt"),
+            dvDataList = root.querySelector('#dvDataList'),
             ddlType = root.querySelector('#ddlType'),
             txtAmount = root.querySelector('#txtAmount'),
             txtDesc = root.querySelector('#txtDesc'),
@@ -81,7 +83,7 @@
                 closeDialog();
             }).catch(err => {
                 console.log(err);
-                alert(err.message, "خطا", { type: "error" });
+                alert(err.message || err, "خطا", { type: "error" });
             });
         }
 
@@ -94,5 +96,46 @@
         }
         txtDesc.value = `هزینه ${thisDialogData.monthStr} سال ${thisDialogData.year}`;
         populateAddDebt();
+
+        var mapping = {
+            debtId: "شناسه",
+            description: "شرح",
+            debtPersianName: "نوع",
+            amountStr: "مبلغ",
+            actions: "عملیات",
+        }
+        var gridData = thisDialogData.debts.map(x => {
+            var parent = document.createElement("div");
+
+
+            var btnDelete = document.createElement("button");
+            btnDelete.setAttribute("data-key", x.debtId);
+            btnDelete.className = "formElement delete";
+            btnDelete.innerHTML = "حذف";
+            parent.appendChild(btnDelete);
+
+
+            btnDelete.addEventListener("click", e => {
+                //e.currentTarget.closest("tr").remove();
+                var createRequest = callService(`Debts/${e.currentTarget.getAttribute("data-key")}`, {}, "delete");
+                createRequest.then(res => {
+                    notify(`حذف شد`, "success");
+                    if (thisDialogData.oncloseCallBack)
+                        thisDialogData.oncloseCallBack(res);
+                    closeDialog();
+                }).catch(err => {
+                    console.log(err);
+                    alert(err.message || err, "خطا", { type: "error" });
+                });
+            });
+
+            x.actions = parent;
+
+            x.amountStr = x.amount.toString().toMoney();
+            return x;
+        });
+        var gridObj = new DataGrid(gridData, mapping, {}, {}, tr => { });
+        if (gridData.length)
+            dvDataList.appendChild(gridObj.getTable());
     })();
 </script>

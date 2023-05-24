@@ -22,6 +22,7 @@
         txtYear = root.querySelector('#txtYear'),
         btnSearch = root.querySelector('#btnSearch'),
         Debts = null;
+    Loans = null;
     Payments = null;
     Salaries = null;
     showNavBar(root);
@@ -88,7 +89,7 @@
                             if (x.type == "SALARY" || x.type == "OTHER")
                                 payable = payable - x.amount;
                             x.amountStr = x.amount.toString().toMoney();
-                            x.debtPersianName = getPaymentTypePersianName(x.type);
+                            x.paymentPersianName = getPaymentTypePersianName(x.type);
                             return x;
                         });
                         accs.push(
@@ -101,6 +102,7 @@
                                 debts: filteredDebts,
                                 payments: filteredPayments,
                                 userId: document.params.user.userId,
+                                salaryAmount: salary.amount,
                                 actions: ""
                             });
                         month++;
@@ -121,35 +123,48 @@
                 btnDetails.innerHTML = "مشاهده و چاپ جزئیات";
                 parent.appendChild(btnDetails);
 
-                if (x.payable > 0) {
-                    var btnSalaryPayment = document.createElement("button");
-                    btnSalaryPayment.className = "formElement";
-                    btnSalaryPayment.innerHTML = "ثبت پرداخت";
-                    parent.appendChild(btnSalaryPayment);
+                var btnSalaryPayment = document.createElement("button");
+                btnSalaryPayment.className = "formElement";
+                btnSalaryPayment.innerHTML = "مدیریت پرداخت";
+                parent.appendChild(btnSalaryPayment);
 
-                    var btnManageDebts = document.createElement("button");
-                    btnManageDebts.className = "formElement";
-                    btnManageDebts.innerHTML = "ثبت هزینه";
-                    parent.appendChild(btnManageDebts);
+                var btnManageDebts = document.createElement("button");
+                btnManageDebts.className = "formElement";
+                btnManageDebts.innerHTML = "مدیریت هزینه";
+                parent.appendChild(btnManageDebts);
+
+                var btnManageLoans = document.createElement("button");
+                btnManageLoans.className = "formElement";
+                btnManageLoans.innerHTML = "مدیریت وام";
+                parent.appendChild(btnManageLoans);
 
 
-                    btnSalaryPayment.addEventListener("click", () => {
-                        //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
-                        DialogData = x;
-                        x.oncloseCallBack = () => {
-                            search(x.year);
-                        }
-                        showDialog("PartialViews/Modals/AddPayment.html", "ثبت پرداخت", { url: true })
-                    });
-                    btnManageDebts.addEventListener("click", () => {
-                        //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
-                        DialogData = x;
-                        x.oncloseCallBack = () => {
-                            search(x.year);
-                        }
-                        showDialog("PartialViews/Modals/AddDebt.html", "ثبت هزینه", { url: true })
-                    });
-                }
+                btnSalaryPayment.addEventListener("click", () => {
+                    //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
+                    DialogData = x;
+                    x.oncloseCallBack = () => {
+                        search(x.year);
+                    }
+                    showDialog("PartialViews/Modals/AddPayment.html", "مدیریت پرداخت", { url: true })
+                });
+                btnManageDebts.addEventListener("click", () => {
+                    //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
+                    DialogData = x;
+                    x.oncloseCallBack = () => {
+                        search(x.year);
+                    }
+                    showDialog("PartialViews/Modals/AddDebt.html", "مدیریت هزینه", { url: true })
+                });
+                btnManageLoans.addEventListener("click", () => {
+                    //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
+                    x.Loans = Loans;
+                    DialogData = x;
+                    x.oncloseCallBack = () => {
+                        search(x.year);
+                    }
+                    showDialog("PartialViews/Modals/AddLoan.html", "مدیریت وام", { url: true })
+                });
+
                 btnDetails.addEventListener("click", () => {
                     DialogData = x;
                     showDialog("PartialViews/Modals/AccDetails.html", "گزارش حقوق و دستمزد", { url: true })
@@ -183,12 +198,14 @@
             `Users/${document.params.user.userId}/Salaries?year=${year}`,
             `Users/${document.params.user.userId}/Payments?year=${year}`,
             `Users/${document.params.user.userId}/Debts?year=${year}`,
+            `Users/${document.params.user.userId}/Loans?year=${year}`,
         ];
         callServices(names, [{}, {}, {}], "get")
             .then((res) => {
                 Salaries = res[0];
                 Payments = res[1];
                 Debts = res[2];
+                Loans = res[3];
                 fillAccsTable();
             });
     }
