@@ -6,7 +6,7 @@
     <div id="dvPayments"></div>
     <h3 id="hSum"></h3>
     <div class="inlineButtons">
-        <button class="formElement add" id="btnPrint" onclick="window.print()">چاپ</button>
+        <button class="formElement add" id="btnPrint">چاپ</button>
         <button class="formElement delete" onclick="closeDialog()">انصراف</button>
     </div>
 </div>
@@ -23,6 +23,7 @@
     }
 </style>
 <script type="text/javascript">
+    var TemplateData;
     (() => {
         const root = document.querySelector("#dialogPartial-AccDetails");
         const hTitle = root.querySelector("#hTitle"),
@@ -59,6 +60,12 @@
             // Sum
             hSum.innerHTML = "مجموع قایل پرداخت: " + thisDialogData.payableStr;
         }
+        
+        function printAccDetails() {
+            TemplateData = root;
+            getHtmlDomByURL("PartialViews/Prints/AccDetailsPrint.html", false).then(tmplate => PrintElem(tmplate));
+        }
+        btnPrint.onclick = printAccDetails;
         callService("Users/" + thisDialogData.userId, {}, "get")
             .then(userRes => {
                 user = userRes;
