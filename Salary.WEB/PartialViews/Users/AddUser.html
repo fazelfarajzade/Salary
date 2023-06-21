@@ -1,6 +1,6 @@
 ﻿<div id="partialviews-AddUser" class="page">
     <div class="header">
-        <h1 class="view-current-title">ایجاد خبر جدید</h1>
+        <h1 class="view-current-title">ایجاد کاربر جدید</h1>
         <div id="navigationBar"></div>
         <div class="view-action-buttons">
         </div>
@@ -25,6 +25,16 @@
                     <input type="text" id="txtFamily" class="formElement" />
                 </td>
             </tr>
+            <tr>
+                <td class="labelCell">شماره کارت:</td>
+                <td>
+                    <input type="text" id="txtCardNo" class="formElement" />
+                </td>
+                <td class="labelCell">شماره حساب:</td>
+                <td>
+                    <input type="text" id="txtAccountNo" class="formElement" />
+                </td>
+            </tr>
         </table>
         <div class="inlineButtons">
             <button class="formElement add" id="btnSaveUser">ذخیره کاربر</button>
@@ -39,11 +49,15 @@
         ddlBranch = root.querySelector('#ddlBranch'),
         txtName = root.querySelector('#txtName'),
         txtFamily = root.querySelector('#txtFamily'),
+        txtCardNo = root.querySelector('#txtCardNo'),
+        txtAccountNo = root.querySelector('#txtAccountNo'),
         btnSaveUser = root.querySelector('#btnSaveUser'),
         btnEditUser = root.querySelector('#btnEditUser'),
         User = null;
     showNavBar(root);
 
+    setDigitsAllowed(txtCardNo);
+    setDigitsAllowed(txtAccountNo);
     function getData() {
         return new Promise((resolve, reject) => {
             if (!ddlBranch.value) {
@@ -62,7 +76,9 @@
             var data = {
                 BranchId: ddlBranch.value,
                 Name: txtName.value,
-                Family: txtFamily.value
+                Family: txtFamily.value,
+                CardNo: txtCardNo.value,
+                AccountNo: txtAccountNo.value,
             }
             return resolve(data);
         });
@@ -72,6 +88,8 @@
         ddlBranch.value = user.branchId;
         txtName.value = user.name;
         txtFamily.value = user.family;
+        txtCardNo.value = user.cardNo;
+        txtAccountNo.value = user.accountNo;
     }
 
     async function save(edit = false) {
@@ -100,7 +118,7 @@
             save();
         }
         ddlBranch.focus();
-        var focusOrder = [ddlBranch, txtName, txtFamily];
+        var focusOrder = [ddlBranch, txtName, txtFamily, txtCardNo, txt];
         if (document.params && document.params.User) {
             focusOrder.push([btnEditUser, true]);
             User = document.params.User;

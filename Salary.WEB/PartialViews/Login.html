@@ -150,7 +150,7 @@
     var txtUser = root.querySelector("#txtUserName"),
         txtPass = root.querySelector("#txtPassword");
     function getAccessToken(username, password, callback) {
-        API.callMethods(["User/Authentication"], [{ username: username, password: password }], false, false)
+        API.callMethods(["Authentication"], [{ userName: username, password: password }], "post", false)
             .then(x => {
                 callback(x[0]);
             })
@@ -167,7 +167,7 @@
                         });
                 }
                 else {
-                    alert(err.Message || err, null, {
+                    alert(err.message || err, null, {
                         confirmCallBack: () => {
                             txtUser.select();
                             txtUser.focus();
@@ -179,19 +179,8 @@
     function tryLogin(e) {
         e.preventDefault();
         getAccessToken(txtUser.value, txtPass.value, (result) => {
-            if (result.success === true) {
-                localStorage.setItem("ticket", result.token);
-                loadPartialView(PartialViewTemplates.FrontPage);
-                //setTimeout(function () { ResetAccessToken(result.token); }, 1000 * result.Timeout - 50);
-            }
-            else {
-                alert(err.Message || err, null, {
-                    confirmCallBack: () => {
-                        txtUser.select();
-                        txtUser.focus();
-                    }
-                });
-            }
+            localStorage.setItem("ticket", result.token);
+            loadPartialView(PartialViewTemplates.FrontPage);
         });
         return false;
     }

@@ -21,5 +21,7 @@ namespace Salary.API.Core.Entities
         public Roles Role { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Family { get; set; } = string.Empty;
+        public string CardNo { get; set; } = string.Empty;
+        public string AccountNo { get; set; } = string.Empty;
     }
 }

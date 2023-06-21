@@ -2,8 +2,23 @@
     <div>
         <img src="resources/icons/72x72.png" style="height: 15mm;float: left;margin: 20px;display: none;" />
         <div id="main">
-            ${TemplateData.outerHTML}
+            ${TemplateData.root}
         </div>
+        <p>
+            بدینوسیله با آگاهی کامل و در صحت سلامت کامل روحی و روانی و با اختیار اقرار می نمایم، اینجانب
+            ${TemplateData.user.name} ${TemplateData.user.family}
+            کارمند شاغل در رستوران سوپراستار بابت حقوق و مزایای
+            ${TemplateData.details.monthStr} سال ${TemplateData.details.year} ،
+            کلیه حق و حقوق خود به مبلغ خالص
+            ${(TemplateData.details.payments.map(x => x.amount).reduce((a,b)=>a+b) || 0).toString().toMoney()} ریال
+            به شرح جدول بالا نقدا از کارفرمای خود دریافت نموده و هیچ گونه مطالباتی در این خصوص از ایشان نداشته و هیچ گونه حقو ادعایی نسبت به طرح دعوا در هیچ یک از محاکم قانونی را ندارم.
+        </p>
+        <br />
+        <br />
+        <br />
+        <p>
+            امضا و اثر انگشت
+        </p>
     </div>
     <style>
         @font-face {

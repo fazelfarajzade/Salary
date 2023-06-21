@@ -2,9 +2,11 @@
 using Salary.API.Core.Interfaces;
 using Salary.API.Core.Repository.Interfaces;
 using Salary.API.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Salary.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase

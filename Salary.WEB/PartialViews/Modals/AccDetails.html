@@ -36,7 +36,6 @@
         const thisDialogData = { ...DialogData };
         let user = null;
         let branch = null;
-
         function populateAccDetails() {
             hTitle.innerHTML = `گزارش حقوق و دستمزد ${thisDialogData.monthStr}  ماه ${thisDialogData.year} کاربر ${user.name} ${user.family} شعبه ${branch.branchName}`;
             // Debts
@@ -62,7 +61,11 @@
         }
         
         function printAccDetails() {
-            TemplateData = root;
+            TemplateData = {};
+            TemplateData.root = root.outerHTML;
+            TemplateData.user = user;
+            TemplateData.branch = branch;
+            TemplateData.details = thisDialogData;
             getHtmlDomByURL("PartialViews/Prints/AccDetailsPrint.html", false).then(tmplate => PrintElem(tmplate));
         }
         btnPrint.onclick = printAccDetails;

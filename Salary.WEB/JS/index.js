@@ -86,32 +86,32 @@ async function FetchResources() {
                 }
             }
             var ticket = localStorage.getItem("ticket");
-            loadPartialView(PartialViewTemplates.FrontPage, null, () => {
-                document.querySelector("#myItem1").style.display = "none";
-                clearTimeout(barTimeOut);
-                //ResetAccessToken(ticket);
-            });
-            //if (ticket) {
-            //    loadPartialView(PartialViewTemplates.FrontPage, null, () => {
-            //        document.querySelector("#myItem1").style.display = "none";
-            //        clearTimeout(barTimeOut);
-            //        ResetAccessToken(ticket);
-            //    });
-            //}
-            //else {
-            //    loadPartialView(PartialViewTemplates.Login, null, () => {
-            //        document.querySelector("#myItem1").style.display = "none";
-            //        clearTimeout(barTimeOut);
-            //    });
-            //}
+            //loadPartialView(PartialViewTemplates.FrontPage, null, () => {
+            //    document.querySelector("#myItem1").style.display = "none";
+            //    clearTimeout(barTimeOut);
+            //    //ResetAccessToken(ticket);
+            //});
+            if (ticket) {
+                loadPartialView(PartialViewTemplates.FrontPage, null, () => {
+                    document.querySelector("#myItem1").style.display = "none";
+                    clearTimeout(barTimeOut);
+                    ResetAccessToken(ticket);
+                });
+            }
+            else {
+                loadPartialView(PartialViewTemplates.Login, null, () => {
+                    document.querySelector("#myItem1").style.display = "none";
+                    clearTimeout(barTimeOut);
+                });
+            }
         });
 }
 FetchResources();
 async function ResetAccessToken(ticket) {
     try {
-        API.Ticket = ticket;
-        var result = await callService("User/RenewAuthentication");
-        localStorage.setItem("ticket", result.token);
+        //API.Ticket = ticket;
+        //var result = await callService("User/RenewAuthentication");
+        //localStorage.setItem("ticket", result.token);
     } catch (e) {
         //signOut();
     }

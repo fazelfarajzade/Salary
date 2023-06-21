@@ -7,7 +7,6 @@ using Salary.API.Core.Repository;
 using Salary.API.Core.Repository.Interfaces;
 using Salary.API.Filters;
 using Salary.API.Middlewares;
-using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -103,9 +102,13 @@ var app = builder.Build();
 
 
 app.UseCors("corsapp");
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 if (app.Environment.IsDevelopment())
 {
