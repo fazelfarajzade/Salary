@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var key = "WFIKecttrTlZrjVXPkfbUsVXZvVie";
+var key = "VVFIKecttrTlZrjVXPkfbUsVXZvVie";
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -100,7 +100,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-
+//app.UseDeveloperExceptionPage();
 app.UseCors("corsapp");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -113,10 +113,9 @@ app.UseAuthorization();
 if (app.Environment.IsDevelopment())
 {
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.MapControllers();

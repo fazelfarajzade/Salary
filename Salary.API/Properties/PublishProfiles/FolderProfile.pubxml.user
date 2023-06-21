@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\d\publish</_PublishTargetUrl>
+    <History>True|2023-06-21T19:48:35.8938024Z;True|2023-06-22T00:03:27.4661797+04:30;True|2023-06-21T23:54:33.4112013+04:30;True|2023-06-21T23:23:50.2971321+04:30;True|2023-06-21T22:47:40.1716454+04:30;True|2023-06-21T22:39:29.4943127+04:30;True|2023-06-21T22:34:20.0631846+04:30;True|2023-06-21T22:32:52.6632904+04:30;True|2023-06-21T22:32:22.3847174+04:30;True|2023-06-21T22:16:29.6118699+04:30;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="SqlConnection">
+      <Value>data source=superstarsalary.ir%3bdatabase=superstarsala%3buser id=superstarsala%3bpassword=r^^5%4026GPo&amp;wVJzb%3bTrustServerCertificate=True%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
