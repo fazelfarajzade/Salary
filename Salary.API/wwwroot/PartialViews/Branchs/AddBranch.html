@@ -1,0 +1,95 @@
+﻿<div id="partialviews-AddBranch" class="page">
+    <div class="header">
+        <h1 class="view-current-title">ایجاد شعبه جدید</h1>
+        <div id="navigationBar"></div>
+        <div class="view-action-buttons">
+        </div>
+    </div>
+    <div class="pageContent">
+        <table>
+            <tr>
+                <td class="labelCell">نام شعبه:</td>
+                <td>
+                    <input type="text" id="txtBranchName" class="formElement" />
+                </td>
+            </tr>
+        </table>
+        <div class="inlineButtons">
+            <button class="formElement add" id="btnSaveBranch">ذخیره شعبه</button>
+            <button class="formElement edit" id="btnEditBranch" style="display: none;">ویرایش شعبه</button>
+            <button class="formElement delete" onclick="loadLastPartial()">انصراف</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var root = document.querySelector("#partialviews-AddBranch"),
+        txtBranchName = root.querySelector('#txtBranchName'),
+        btnSaveBranch = root.querySelector('#btnSaveBranch'),
+        btnEditBranch = root.querySelector('#btnEditBranch'),
+        Branch = null;
+    showNavBar(root);
+
+    function getData() {
+        return new Promise((resolve, reject) => {
+            if (!txtBranchName.value) {
+                alert("نام شعبه را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtBranchName.focus(); } });
+                return reject();
+            }
+
+            var data = {
+                BranchName: txtBranchName.value,
+            }
+            return resolve(data);
+        });
+    }
+
+    function fillForm(branch) {
+        txtBranchName.value = branch.branchName;
+    }
+
+    async function save(edit = false) {
+        var data = await getData();
+        if (!data) {
+            return false;
+        }
+        var createRequest = callService("Branchs" + (edit ? `/${Branch.branchId}` : ""), data, (edit ? "put" : "post"));
+        createRequest.then(res => {
+            var successMessage = edit ? "شعبه ویرایش شد" : "شعبه با موفقیت ایجاد شد"
+            alert(successMessage, "عملیات موفق"
+                , {
+                    type: "success",
+                    confirmCallBack: () => {
+                        loadLastPartial();
+                    }
+                });
+        }).catch(err => {
+            console.log(err);
+            alert(err.message || err, "خطا", { type: "error" });
+        });
+    }
+    function populateAddOrEditBranch() {
+        btnSaveBranch.onclick = () => {
+            save();
+        }
+        var focusOrder = [txtBranchName];
+        if (document.params && document.params.Branch) {
+            focusOrder.push([btnEditBranch, true]);
+            Branch = document.params.Branch;
+            btnEditBranch.style.display = "inline-block";
+            btnSaveBranch.style.display = "none";
+            btnEditBranch.onclick = () => {
+                save(true);
+            }
+
+            setTimeout(() => {
+                fillForm(Branch);
+            }, 0);
+        }
+        else {
+            focusOrder.push([btnSaveBranch, true]);
+        }
+        ApplyFocusOnKeyPress(focusOrder);
+    }
+    populateAddOrEditBranch();
+</script>

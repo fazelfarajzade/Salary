@@ -1,0 +1,136 @@
+﻿<div id="dialogPartial-AddLoan" class="dialogPartial">
+    <div id="dvDataList"></div>
+    <table>
+        <tr>
+            <td class="labelCell">مبلغ وام:</td>
+            <td>
+                <input dir="ltr" type="tel" id="txtAmount" class="formElement" />
+            </td>
+            <td class="labelCell">تعداد اقساط:</td>
+            <td>
+                <input dir="ltr" type="tel" id="txtNumberOfInstallments" class="formElement" />
+            </td>
+        </tr>
+        <tr>
+            <td class="labelCell">توضیحات</td>
+            <td colspan="3">
+                <textarea id="txtDesc" class="formElement"></textarea>
+            </td>
+        </tr>
+    </table>
+    <div class="inlineButtons">
+        <button class="formElement add" id="btnSaveLoan">ثبت</button>
+        <button class="formElement delete" onclick="closeDialog()">انصراف</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (() => {
+        const root = document.querySelector("#dialogPartial-AddLoan"),
+            dvDataList = root.querySelector('#dvDataList'),
+            txtNumberOfInstallments = root.querySelector('#txtNumberOfInstallments'),
+            txtAmount = root.querySelector('#txtAmount'),
+            txtDesc = root.querySelector('#txtDesc'),
+            btnSaveLoan = root.querySelector('#btnSaveLoan');
+        txtAmount.toMoney();
+
+        const thisDialogData = { ...DialogData };
+
+        function getData() {
+            return new Promise((resolve, reject) => {
+
+                if (!txtAmount.value) {
+                    alert("مبلغ وام را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+                    return reject();
+                }
+                if (!txtNumberOfInstallments.value) {
+                    alert("تعداد اقساط را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtNumberOfInstallments.focus(); } });
+                    return reject();
+                }
+                const amount = parseInt(txtAmount.value.replaceAll(",", ""));
+                if (amount / txtNumberOfInstallments > thisDialogData.salaryAmount) {
+                    var max = (12 - thisDialogData.month) * thisDialogData.salaryAmount;
+                    alert(`مبلغ وام نمی تواند بیشتر از ${max} ریال باشد`, "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+                    return reject();
+                }
+
+
+                var data = {
+                    UserId: thisDialogData.userId,
+                    Year: thisDialogData.year,
+                    Month: thisDialogData.month,
+                    NumberOfInstallments: txtNumberOfInstallments.value,
+                    Amount: amount,
+                    Description: txtDesc.value,
+                }
+                return resolve(data);
+            });
+        }
+
+        async function save() {
+            var data = await getData();
+            if (!data) {
+                return false;
+            }
+            var createRequest = callService("Loans", data, "post");
+            createRequest.then(res => {
+                notify(`وام ثبت شد`, "success");
+                if (thisDialogData.oncloseCallBack)
+                    thisDialogData.oncloseCallBack(res);
+                closeDialog();
+            }).catch(err => {
+                console.log(err);
+                alert(err.message || err, "خطا", { type: "error" });
+            });
+        }
+
+        function populateAddLoan() {
+            btnSaveLoan.onclick = () => {
+                save();
+            }
+            var focusOrder = [txtAmount, txtNumberOfInstallments, txtDesc, btnSaveLoan];
+            ApplyFocusOnKeyPress(focusOrder);
+        }
+        txtDesc.value = `وام ${thisDialogData.monthStr} سال ${thisDialogData.year}`;
+        populateAddLoan();
+        var mapping = {
+            amountStr: "مبلغ",
+            numberOfInstallments: "تعداد اقساط",
+            description: "توضیحات",
+            actions: "عملیات",
+        }
+        var gridData = thisDialogData.Loans.map(x => {
+            var parent = document.createElement("div");
+
+
+            var btnDelete = document.createElement("button");
+            btnDelete.setAttribute("data-key", x.loanId);
+            btnDelete.className = "formElement delete";
+            btnDelete.innerHTML = "حذف";
+            parent.appendChild(btnDelete);
+
+
+            btnDelete.addEventListener("click", e => {
+                //e.currentTarget.closest("tr").remove();
+                var createRequest = callService(`Loans/${e.currentTarget.getAttribute("data-key")}`, {}, "delete");
+                createRequest.then(res => {
+                    notify(`وام حذف شد`, "success");
+                    if (thisDialogData.oncloseCallBack)
+                        thisDialogData.oncloseCallBack(res);
+                    closeDialog();
+                }).catch(err => {
+                    console.log(err);
+                    alert(err.message || err, "خطا", { type: "error" });
+                });
+            });
+
+            x.actions = parent;
+
+            x.amountStr = x.amount.toString().toMoney();
+            return x;
+        });
+        var gridObj = new DataGrid(gridData, mapping, {}, {}, tr => { });
+        if (gridData.length)
+            dvDataList.appendChild(gridObj.getTable());
+    })();
+</script>

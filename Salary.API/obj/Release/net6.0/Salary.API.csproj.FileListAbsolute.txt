@@ -67,3 +67,4 @@ C:\d\workspace\Salary\Salary.API\obj\Release\net6.0\refint\Salary.API.dll
 C:\d\workspace\Salary\Salary.API\obj\Release\net6.0\Salary.API.pdb
 C:\d\workspace\Salary\Salary.API\obj\Release\net6.0\Salary.API.genruntimeconfig.cache
 C:\d\workspace\Salary\Salary.API\obj\Release\net6.0\ref\Salary.API.dll
+C:\d\workspace\Salary\Salary.API\bin\Release\net6.0\Salary.API.staticwebassets.runtime.json

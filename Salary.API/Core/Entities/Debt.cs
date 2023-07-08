@@ -33,6 +33,7 @@ namespace Salary.API.Core.Entities
         public int DebtMonth { get; set; }
         public DebtReferenceTypes? DebtReferenceType { get; set; }
         public int? DebtReferenceId { get; set; }
+        public DateTime DebtDate { get; set; }
 
     }
 }

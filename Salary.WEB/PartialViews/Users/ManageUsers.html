@@ -31,6 +31,7 @@
                 userId: "کد کاربر",
                 name: "نام",
                 family: "نام خانوادگی",
+                branchName: "شعبه",
                 actions: "عملیات", 
             }
             users = users.map(x => {
@@ -72,7 +73,11 @@
             dvUsersList.innerHTML = " کاربری قبلا ایجاد نشده است.";
         }
     }
-    function populateUsers(users) {
+    function populateUsers(users, branchs) {
+        users = users.map(x => {
+            x.branchName = (branchs.find(b => b.branchId == x.branchId) || {}).branchName || "-";
+            return x;
+        });
         Users = users;
         fillUsersTable(Users);
     }
@@ -117,8 +122,8 @@
             }
         );
     }
-    callService("Users", {}, "get").then(users => {
-        populateUsers(users);
+    callServices(["Users", "Branchs"], [{}, {}], "get").then(res => {
+        populateUsers(res[0], res[1]);
     });
     
 </script>

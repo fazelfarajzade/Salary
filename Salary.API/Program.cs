@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Salary.API.Core;
@@ -6,6 +7,7 @@ using Salary.API.Core.Interfaces;
 using Salary.API.Core.Repository;
 using Salary.API.Core.Repository.Interfaces;
 using Salary.API.Filters;
+using Salary.API.JsonConverters;
 using Salary.API.Middlewares;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -47,11 +49,12 @@ builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ChangeErrorFormat>();
-}).AddJsonOptions(opts =>
-{
-    var enumConverter = new JsonStringEnumConverter();
-    opts.JsonSerializerOptions.Converters.Add(enumConverter);
-});
+})
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        opts.JsonSerializerOptions.Converters.Add(new DateTimeToStringConverter());
+    });
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -93,30 +96,23 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 {
-    builder.WithOrigins("*").AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
 var app = builder.Build();
-
+app.UseCors("corsapp");
 // Configure the HTTP request pipeline.
 
+app.UseSwagger();
+app.UseSwaggerUI();
 //app.UseDeveloperExceptionPage();
-app.UseCors("corsapp");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-
-
-if (app.Environment.IsDevelopment())
-{
-
-}
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseHttpsRedirection();
 
 app.MapControllers();
 

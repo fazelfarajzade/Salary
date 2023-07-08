@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Salary.API.Core.Entities;
 using Salary.API.Core.Repository.Interfaces;
+using Salary.API.Core.Tools;
+using Salary.API.DTOs.Request.Debt;
 
 namespace Salary.API.Controllers
 {
@@ -43,13 +45,24 @@ namespace Salary.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Debt debt)
+        public async Task<ActionResult> Post([FromBody] DebtDTO dto)
         {
             try
             {
-                debt.RegDate = DateTime.Now;
+                var debt = new Debt()
+                {
+                    Amount = dto.Amount,
+                    DebtMonth = dto.DebtMonth,
+                    DebtYear = dto.DebtYear,
+                    Description = dto.Description,
+                    UserId = dto.UserId,
+                    DebtDate = Tools.PersianDateStrToDateTime(dto.DebtDate).Value,
+                    RegDate = DateTime.Now,
+                    Type = dto.Type,
+                };
+
                 var debtId = await _debtRepo.InsertDebt(debt);
                 return Ok(debtId);
             }
@@ -69,7 +82,7 @@ namespace Salary.API.Controllers
                 if (deleted)
                     return Ok();
                 else
-                    return BadRequest("تغییری در اطلاعات ثبتی داده نشد.");
+                    return BadRequest("هیچ هزینه ای حذف نشد.");
             }
             catch (Exception ex)
             {

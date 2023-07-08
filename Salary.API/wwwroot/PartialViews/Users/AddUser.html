@@ -1,0 +1,150 @@
+﻿<div id="partialviews-AddUser" class="page">
+    <div class="header">
+        <h1 class="view-current-title">ایجاد کاربر جدید</h1>
+        <div id="navigationBar"></div>
+        <div class="view-action-buttons">
+        </div>
+    </div>
+    <div class="pageContent">
+        <table>
+            <tr>
+                <td class="labelCell">شعبه:</td>
+                <td>
+                    <select id="ddlBranch" class="formElement">
+                        <option value="" selected disabled>شعبه فعالیت کاربر</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="labelCell">نام:</td>
+                <td>
+                    <input type="text" id="txtName" class="formElement" />
+                </td>
+                <td class="labelCell">نام خانوادگی:</td>
+                <td>
+                    <input type="text" id="txtFamily" class="formElement" />
+                </td>
+            </tr>
+            <tr>
+                <td class="labelCell">شماره کارت:</td>
+                <td>
+                    <input type="text" id="txtCardNo" class="formElement" />
+                </td>
+                <td class="labelCell">شماره حساب:</td>
+                <td>
+                    <input type="text" id="txtAccountNo" class="formElement" />
+                </td>
+            </tr>
+        </table>
+        <div class="inlineButtons">
+            <button class="formElement add" id="btnSaveUser">ذخیره کاربر</button>
+            <button class="formElement edit" id="btnEditUser" style="display: none;">ویرایش کاربر</button>
+            <button class="formElement delete" onclick="loadLastPartial()">انصراف</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var root = document.querySelector("#partialviews-AddUser"),
+        ddlBranch = root.querySelector('#ddlBranch'),
+        txtName = root.querySelector('#txtName'),
+        txtFamily = root.querySelector('#txtFamily'),
+        txtCardNo = root.querySelector('#txtCardNo'),
+        txtAccountNo = root.querySelector('#txtAccountNo'),
+        btnSaveUser = root.querySelector('#btnSaveUser'),
+        btnEditUser = root.querySelector('#btnEditUser'),
+        User = null;
+    showNavBar(root);
+
+    setDigitsAllowed(txtCardNo);
+    setDigitsAllowed(txtAccountNo);
+    function getData() {
+        return new Promise((resolve, reject) => {
+            if (!ddlBranch.value) {
+                alert("شعبه کاربر را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { ddlBranch.focus(); } });
+                return reject();
+            }
+            if (!txtName.value) {
+                alert("نام کاربر را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtName.focus(); } });
+                return reject();
+            }
+            if (!txtFamily.value) {
+                alert("نام خانوادگی کاربر را وارد کنید.", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtFamily.focus(); } });
+                return reject();
+            }
+
+            var data = {
+                BranchId: ddlBranch.value,
+                Name: txtName.value,
+                Family: txtFamily.value,
+                CardNo: txtCardNo.value,
+                AccountNo: txtAccountNo.value,
+            }
+            return resolve(data);
+        });
+    }
+
+    function fillForm(user) {
+        ddlBranch.value = user.branchId;
+        txtName.value = user.name;
+        txtFamily.value = user.family;
+        txtCardNo.value = user.cardNo;
+        txtAccountNo.value = user.accountNo;
+    }
+
+    async function save(edit = false) {
+        var data = await getData();
+        if (!data) {
+            return false;
+        }
+        var createRequest = callService("Users" + (edit ? `/${User.userId}` : ''), data, (edit ? 'put' : 'post'));
+        createRequest
+            .then(res => {
+                var successMessage = edit ? "کاربر ویرایش شد" : "کاربر با موفقیت ایجاد شد"
+                alert(successMessage, "عملیات موفق"
+                    , {
+                        type: "success",
+                        confirmCallBack: () => {
+                            loadLastPartial();
+                        }
+                    });
+            }).catch(err => {
+                console.log(err);
+                alert(err.message || err, "خطا", { type: "error" });
+            });
+    }
+    function populateAddOrEditUser() {
+        btnSaveUser.onclick = () => {
+            save();
+        }
+        ddlBranch.focus();
+        var focusOrder = [ddlBranch, txtName, txtFamily, txtCardNo, txt];
+        if (document.params && document.params.User) {
+            focusOrder.push([btnEditUser, true]);
+            User = document.params.User;
+            btnEditUser.style.display = "inline-block";
+            btnSaveUser.style.display = "none";
+            btnEditUser.onclick = () => {
+                save(true);
+            }
+
+            setTimeout(() => {
+                fillForm(User);
+            }, 0);
+        }
+        else {
+            focusOrder.push([btnSaveUser, true]);
+        }
+        ApplyFocusOnKeyPress(focusOrder);
+    }
+    callService("Branchs", {}, "get")
+        .then(branchs => {
+            fillDDL(ddlBranch, branchs, "branchName", "branchId");
+            populateAddOrEditUser();
+        })
+        .catch(error => {
+            alert(error);
+            loadLastPartial();
+        });
+
+</script>
