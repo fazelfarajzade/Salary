@@ -114,6 +114,20 @@ namespace Salary.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("{id}/Credits")]
+        public async Task<IActionResult> GetUserCredits(int id, [FromQuery] int? year)
+        {
+            try
+            {
+                var credits = await _userRepo.GetUserCredits(id, year);
+                return Ok(credits);
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet("{id}/Loans")]
         public async Task<IActionResult> GetUserLoans(int id, [FromQuery] int? year)
         {

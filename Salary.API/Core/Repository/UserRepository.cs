@@ -109,7 +109,7 @@ namespace Salary.API.Core.Repository
         }
         public async Task<IEnumerable<Debt>> GetUserDebts(int id, int? year)
         {
-            var query = $"SELECT * FROM Debts where {nameof(User.UserId)} = @id";
+            var query = $"SELECT * FROM Debts where {nameof(Debt.UserId)} = @id";
             if (year != null)
             {
                 query += $" and {nameof(Debt.DebtYear)} = @year";
@@ -118,6 +118,19 @@ namespace Salary.API.Core.Repository
             {
                 var debts = await connection.QueryAsync<Debt>(query, new { id, year });
                 return debts.ToList();
+            }
+        }
+        public async Task<IEnumerable<Credit>> GetUserCredits(int id, int? year)
+        {
+            var query = $"SELECT * FROM Credits where {nameof(Credit.UserId)} = @id";
+            if (year != null)
+            {
+                query += $" and {nameof(Credit.CreditYear)} = @year";
+            }
+            using (var connection = _context.CreateConnection())
+            {
+                var credits = await connection.QueryAsync<Credit>(query, new { id, year });
+                return credits.ToList();
             }
         }
     }

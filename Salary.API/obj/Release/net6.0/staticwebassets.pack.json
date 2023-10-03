@@ -109,6 +109,10 @@
       "PackagePath": "staticwebassets\\PartialViews\\Modals\\AccDetails.html"
     },
     {
+      "Id": "C:\\d\\workspace\\Salary\\Salary.API\\wwwroot\\PartialViews\\Modals\\AddCredit.html",
+      "PackagePath": "staticwebassets\\PartialViews\\Modals\\AddCredit.html"
+    },
+    {
       "Id": "C:\\d\\workspace\\Salary\\Salary.API\\wwwroot\\PartialViews\\Modals\\AddDebt.html",
       "PackagePath": "staticwebassets\\PartialViews\\Modals\\AddDebt.html"
     },

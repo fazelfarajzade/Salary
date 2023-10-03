@@ -1,4 +1,5 @@
-﻿using Salary.API.Core.Tools;
+﻿using Resources.PersianTools;
+using Salary.API.Core.Tools;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,7 +11,7 @@ namespace Salary.API.JsonConverters
         ref Utf8JsonReader reader,
         Type typeToConvert,
         JsonSerializerOptions options) =>
-            throw new NotImplementedException();
+            (new Resources.PersianTools.PersianDate(reader.GetString())).BaseDateTime;
 
         public override void Write(
             Utf8JsonWriter writer,

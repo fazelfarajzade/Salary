@@ -14,5 +14,6 @@ namespace Salary.API.Core.Repository.Interfaces
         public Task<IEnumerable<Loan>> GetUserLoans(int id, int? year);
         public Task<IEnumerable<Payment>> GetUserPayments(int id, int? year);
         public Task<IEnumerable<Debt>> GetUserDebts(int id, int? year);
+        public Task<IEnumerable<Credit>> GetUserCredits(int id, int? year);
     }
 }

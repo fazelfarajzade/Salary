@@ -21,12 +21,15 @@
     var dvAccList = root.querySelector('#dvAccList'),
         txtYear = root.querySelector('#txtYear'),
         btnSearch = root.querySelector('#btnSearch'),
-        Debts = null;
-    Loans = null;
-    Payments = null;
-    Salaries = null;
+        Debts = null,
+        Credits = null,
+        Loans = null,
+        Payments = null,
+        Salaries = null;
     showNavBar(root);
     var Months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    var today = new GregorianToSolar(0, 0, 0);
+    txtYear.value = today.gYear;
 
     //var filteredDebts = {};
     //var filteredPayments = {};
@@ -84,6 +87,13 @@
                             x.debtPersianName = getDebtTypePersianName(x.type);
                             return x;
                         });
+                        let filteredCredits = Credits.filter(d => d.creditYear == year && d.creditMonth == month);
+                        filteredCredits = filteredCredits.map(x => {
+                            payable = payable + x.amount;
+                            x.amountStr = x.amount.toString().toMoney();
+                            x.creditPersianName = getCreditTypePersianName(x.type);
+                            return x;
+                        });
                         let filteredPayments = Payments.filter(p => p.paymentYear == year && p.paymentMonth == month);
                         filteredPayments = filteredPayments.map(x => {
                             if (x.type == "SALARY" || x.type == "OTHER")
@@ -100,6 +110,7 @@
                                 payable: payable,
                                 payableStr: payable.toString().toMoney(),
                                 debts: filteredDebts,
+                                credits: filteredCredits,
                                 payments: filteredPayments,
                                 userId: document.params.user.userId,
                                 salaryAmount: salary.amount,
@@ -132,6 +143,11 @@
                 btnManageDebts.className = "formElement";
                 btnManageDebts.innerHTML = "مدیریت هزینه";
                 parent.appendChild(btnManageDebts);
+                
+                var btnManageCredits = document.createElement("button");
+                btnManageCredits.className = "formElement";
+                btnManageCredits.innerHTML = "مدیریت اضافه پرداختی ها";
+                parent.appendChild(btnManageCredits);
 
                 var btnManageLoans = document.createElement("button");
                 btnManageLoans.className = "formElement";
@@ -155,6 +171,14 @@
                     }
                     showDialog("PartialViews/Modals/AddDebt.html", "مدیریت هزینه", { url: true })
                 });
+                btnManageCredits.addEventListener("click", () => {
+                    //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
+                    DialogData = x;
+                    x.oncloseCallBack = () => {
+                        search(x.year);
+                    }
+                    showDialog("PartialViews/Modals/AddCredit.html", "مدیریت اضافه پرداختی", { url: true })
+                });
                 btnManageLoans.addEventListener("click", () => {
                     //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
                     x.Loans = Loans;
@@ -176,9 +200,28 @@
                 return x;
             });
 
-            var gridObj = new DataGrid(accs, mapping, {}, {}, tr => {
-                selectedRowJSON = JSON.parse(tr.getAttribute('jsondata'));
-            });
+            var gridObj = new DataGrid(
+                accs,
+                mapping,
+                {
+                    onCreateTr: (tr, acc) => {
+                        //debugger;
+                        if (today.gMonth == (acc.month - 1) && today.gYear == acc.year) {
+
+                            tr.style.fontSize = '18px';
+                        }
+                        else {
+                            tr.style.fontSize = '12px';
+                            tr.style.filter = 'blur(1px) opacity(0.7)';
+                        }
+                        return tr;
+                    }
+                },
+                {},
+                tr => {
+                    selectedRowJSON = JSON.parse(tr.getAttribute('jsondata'));
+                }
+            );
             dvAccList.appendChild(gridObj.getTable());
         } else {
             dvAccList.innerHTML = "حقوق کاربر مشخص نشده است.";
@@ -198,6 +241,7 @@
             `Users/${document.params.user.userId}/Salaries?year=${year}`,
             `Users/${document.params.user.userId}/Payments?year=${year}`,
             `Users/${document.params.user.userId}/Debts?year=${year}`,
+            `Users/${document.params.user.userId}/Credits?year=${year}`,
             `Users/${document.params.user.userId}/Loans?year=${year}`,
         ];
         callServices(names, [{}, {}, {}], "get")
@@ -205,7 +249,8 @@
                 Salaries = res[0];
                 Payments = res[1];
                 Debts = res[2];
-                Loans = res[3];
+                Credits = res[3];
+                Loans = res[4];
                 fillAccsTable();
             });
     }

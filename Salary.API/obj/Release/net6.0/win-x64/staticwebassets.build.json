@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "rfsl8dnL+Zjlz4xupROhpZ5yUnKwE63Mg4abehIvncI=",
+  "Hash": "j0dvGJ2LtO9Y22FRV/G8Kv924s3vAFj+m6EZddRUzU4=",
   "Source": "Salary.API",
   "BasePath": "_content/Salary.API",
   "Mode": "Default",
@@ -525,6 +525,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\PartialViews\\Modals\\AccDetails.html"
+    },
+    {
+      "Identity": "C:\\d\\workspace\\Salary\\Salary.API\\wwwroot\\PartialViews\\Modals\\AddCredit.html",
+      "SourceId": "Salary.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\d\\workspace\\Salary\\Salary.API\\wwwroot\\",
+      "BasePath": "_content/Salary.API",
+      "RelativePath": "PartialViews/Modals/AddCredit.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PartialViews\\Modals\\AddCredit.html"
     },
     {
       "Identity": "C:\\d\\workspace\\Salary\\Salary.API\\wwwroot\\PartialViews\\Modals\\AddDebt.html",

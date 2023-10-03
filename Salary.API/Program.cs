@@ -45,6 +45,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IDebtRepository, DebtRepository>();
 builder.Services.AddScoped<IDebtTypeRepository, DebtTypeRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<ICreditRepository, CreditRepository>();
 
 builder.Services.AddControllers(options =>
 {
@@ -96,17 +97,21 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 {
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("https://superstarsalary.ir", "https://api.superstarsalary.ir").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
 }));
 
+
 var app = builder.Build();
-app.UseCors("corsapp");
+
 // Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+}
 
-app.UseSwagger();
-app.UseSwaggerUI();
-//app.UseDeveloperExceptionPage();
-
+app.UseCors("corsapp");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

@@ -396,6 +396,13 @@ function getDebtTypePersianName(type) {
     }
     return types[type] || "تعریف نشده";
 }
+function getCreditTypePersianName(type) {
+    const types = {
+        BONUS: "پاداش",
+        OTHER: "غیره",
+    }
+    return types[type] || "تعریف نشده";
+}
 function getPaymentTypePersianName(type) {
     const types = {
         SALARY: "حقوق",

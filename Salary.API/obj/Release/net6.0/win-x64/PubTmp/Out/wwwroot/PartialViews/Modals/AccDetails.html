@@ -2,6 +2,8 @@
     <h2 id="hTitle"></h2>
     <h3>هزینه ها</h3>
     <div id="dvDebts"></div>
+    <h3>اضافه پرداختی ها</h3>
+    <div id="dvCredits"></div>
     <h3>پرداختی ها</h3>
     <div id="dvPayments"></div>
     <h3 id="hSum"></h3>
@@ -28,6 +30,7 @@
         const root = document.querySelector("#dialogPartial-AccDetails");
         const hTitle = root.querySelector("#hTitle"),
             dvDebts = root.querySelector("#dvDebts"),
+            dvCredits = root.querySelector("#dvCredits"),
             dvPayments = root.querySelector("#dvPayments"),
             hSum = root.querySelector("#hSum"),
             btnPrint = root.querySelector("#btnPrint");
@@ -47,6 +50,15 @@
             }
             const gridDebtObj = new DataGrid(thisDialogData.debts, debtMapping, {}, {}, tr => { });
             dvDebts.appendChild(gridDebtObj.getTable());
+            // Credits
+            const creditMapping = {
+                creditId: "شناسه",
+                description: "شرح",
+                creditPersianName: "نوع",
+                amountStr: "مبلغ",
+            }
+            const gridCreditObj = new DataGrid(thisDialogData.credits, creditMapping, {}, {}, tr => { });
+            dvCredits.appendChild(gridCreditObj.getTable());
             // Payments
             const paymentMapping = {
                 paymentId: "شناسه",
