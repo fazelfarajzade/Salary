@@ -58,6 +58,7 @@ namespace Salary.API.Controllers
                     Amount = loan.Amount / loan.NumberOfInstallments,
                     DebtMonth = i,
                     DebtYear = loan.Year,
+                    DebtDate = DateTime.Now,
                     DebtReferenceId = null, // will change after insert loan
                     DebtReferenceType = Debt.DebtReferenceTypes.LOAN,
                     Description = " قسط وام : " + loan.Description,

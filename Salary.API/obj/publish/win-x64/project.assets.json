@@ -5155,19 +5155,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\AminPC\\.nuget\\packages\\": {}
+    "C:\\Users\\A-farajzadeh\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\d\\workspace\\Salary\\Salary.API\\Salary.API.csproj",
+      "projectUniqueName": "C:\\Users\\A-farajzadeh\\Desktop\\mine\\Salary\\Salary.API\\Salary.API.csproj",
       "projectName": "Salary.API",
-      "projectPath": "C:\\d\\workspace\\Salary\\Salary.API\\Salary.API.csproj",
-      "packagesPath": "C:\\Users\\AminPC\\.nuget\\packages\\",
-      "outputPath": "C:\\d\\workspace\\Salary\\Salary.API\\obj\\publish\\win-x64\\",
+      "projectPath": "C:\\Users\\A-farajzadeh\\Desktop\\mine\\Salary\\Salary.API\\Salary.API.csproj",
+      "packagesPath": "C:\\Users\\A-farajzadeh\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\A-farajzadeh\\Desktop\\mine\\Salary\\Salary.API\\obj\\publish\\win-x64\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\AminPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\A-farajzadeh\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5237,7 +5237,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

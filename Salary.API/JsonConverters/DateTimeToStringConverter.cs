@@ -1,6 +1,4 @@
-﻿using Resources.PersianTools;
-using Salary.API.Core.Tools;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Salary.API.JsonConverters
