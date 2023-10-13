@@ -25,5 +25,6 @@ namespace Salary.API.Core.Entities
         public int PaymentMonth { get; set; }
         [Required]
         public decimal Amount { get; set; }
+        public int? CardId { get; set; }
     }
 }

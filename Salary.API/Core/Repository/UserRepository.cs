@@ -132,5 +132,14 @@ namespace Salary.API.Core.Repository
                 return credits.ToList();
             }
         }
+        public async Task<IEnumerable<Card>> GetUserCards(int id)
+        {
+            var query = $"SELECT * FROM Cards where {nameof(Card.UserId)} = @id";
+            using (var connection = _context.CreateConnection())
+            {
+                var cards = await connection.QueryAsync<Card>(query, new { id });
+                return cards.ToList();
+            }
+        }
     }
 }

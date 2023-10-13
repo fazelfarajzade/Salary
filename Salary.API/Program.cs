@@ -45,6 +45,7 @@ builder.Services.AddScoped<IDebtRepository, DebtRepository>();
 builder.Services.AddScoped<IDebtTypeRepository, DebtTypeRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<ICreditRepository, CreditRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 builder.Services.AddControllers(options =>
 {

@@ -8,20 +8,20 @@ namespace Salary.API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CreditsController : ControllerBase
+    public class CardsController : ControllerBase
     {
-        private readonly ICreditRepository _creditRepo;
-        public CreditsController(ICreditRepository creditRepo)
+        private readonly ICardRepository _cardRepo;
+        public CardsController(ICardRepository cardRepo)
         {
-            _creditRepo = creditRepo;
+            _cardRepo = cardRepo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetCredits()
+        public async Task<IActionResult> GetCards()
         {
             try
             {
-                var credits = await _creditRepo.GetCredits();
-                return Ok(credits);
+                var cards = await _cardRepo.GetCards();
+                return Ok(cards);
             }
             catch (Exception ex)
             {
@@ -30,12 +30,12 @@ namespace Salary.API.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCredit(int id)
+        public async Task<IActionResult> GetCard(int id)
         {
             try
             {
-                var credits = await _creditRepo.GetCredit(id);
-                return Ok(credits);
+                var cards = await _cardRepo.GetCard(id);
+                return Ok(cards);
             }
             catch (Exception ex)
             {
@@ -45,13 +45,13 @@ namespace Salary.API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Credit credit)
+        public async Task<ActionResult> Post([FromBody] Card card)
         {
             try
             {
-                credit.RegDate = DateTime.Now;
-                var creditId = await _creditRepo.InsertCredit(credit);
-                return Ok(creditId);
+                card.RegDateTime = DateTime.Now;
+                var cardId = await _cardRepo.InsertCard(card);
+                return Ok(cardId);
             }
             catch (Exception ex)
             {
@@ -65,11 +65,11 @@ namespace Salary.API.Controllers
         {
             try
             {
-                var deleted = await _creditRepo.DeleteCredit(id);
+                var deleted = await _cardRepo.DeleteCard(id);
                 if (deleted)
                     return Ok();
                 else
-                    return BadRequest("هیچ اضافه پرداختی ای حذف نشد.");
+                    return BadRequest("هیچ کارتی ای حذف نشد.");
             }
             catch (Exception ex)
             {
