@@ -7,7 +7,7 @@ namespace Salary.API.Core.Repository.Interfaces
     {
         public Task<IEnumerable<Debt>> GetDebts();
         public Task<Debt?> GetDebt(int id);
-        public Task<int> InsertDebt(Debt payment, IDbTransaction transaction = null);
+        public Task<int> InsertDebt(Debt payment, IDbTransaction? transaction = null);
         public Task<bool> DeleteDebt(int Id);
 
     }

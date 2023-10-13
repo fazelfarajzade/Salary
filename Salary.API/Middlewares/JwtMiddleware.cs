@@ -17,7 +17,7 @@ namespace Salary.API.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             // Check if the request contains a bearer token
-            string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            string? token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token != null)
             {
                 // Verify the signature of the token

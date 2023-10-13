@@ -51,6 +51,11 @@ namespace Salary.API.Controllers
         {
             try
             {
+                var DebtDate = Tools.PersianDateStrToDateTime(dto.DebtDate);
+                if(DebtDate == null)
+                {
+                    throw new Exception("DebtDate can not be null");
+                }
                 var debt = new Debt()
                 {
                     Amount = dto.Amount,
@@ -58,7 +63,7 @@ namespace Salary.API.Controllers
                     DebtYear = dto.DebtYear,
                     Description = dto.Description,
                     UserId = dto.UserId,
-                    DebtDate = Tools.PersianDateStrToDateTime(dto.DebtDate).Value,
+                    DebtDate = DebtDate.Value,
                     RegDate = DateTime.Now,
                     Type = dto.Type,
                 };

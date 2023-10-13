@@ -1,5 +1,4 @@
 ﻿using Dapper.Contrib.Extensions;
-using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 
 namespace Salary.API.Core.Entities

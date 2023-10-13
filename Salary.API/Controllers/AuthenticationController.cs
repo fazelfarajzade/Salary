@@ -28,13 +28,17 @@ namespace Salary.API.Controllers
             bool execution = true;
             string warningMessage = "";
             string? token = null;
-            User? user = null;
+            User user = new Core.Entities.User();
             DateTime ExpireDateTime = DateTime.Now.AddYears(1);
             if (execution)
             {
                 try
                 {
-                    user = await _userRepo.GetUser(authenticationDTO.UserName, authenticationDTO.Password);
+                    var res = await _userRepo.GetUser(authenticationDTO.UserName, authenticationDTO.Password);
+                    if(res != null)
+                    {
+                        user = res;
+                    }
                 }
                 catch (Exception ex)
                 {

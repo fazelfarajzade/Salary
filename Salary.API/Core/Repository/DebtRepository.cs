@@ -31,7 +31,7 @@ namespace Salary.API.Core.Repository
                 return debts.ToList();
             }
         }
-        public async Task<int> InsertDebt(Debt debt, IDbTransaction transaction = null)
+        public async Task<int> InsertDebt(Debt debt, IDbTransaction? transaction = null)
         {
             //var query = "SELECT * FROM Salaries";
             using (var connection = _context.CreateConnection())

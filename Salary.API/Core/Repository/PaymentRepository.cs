@@ -1,8 +1,6 @@
-﻿using Salary.API.Core.Entities;
+﻿using Dapper.Contrib.Extensions;
+using Salary.API.Core.Entities;
 using Salary.API.Core.Repository.Interfaces;
-using Dapper;
-using Dapper.Contrib;
-using Dapper.Contrib.Extensions;
 
 namespace Salary.API.Core.Repository
 {

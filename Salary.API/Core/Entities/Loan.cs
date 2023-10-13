@@ -1,5 +1,4 @@
-﻿using static Salary.API.Core.Entities.Payment;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Salary.API.Core.Entities

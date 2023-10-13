@@ -32,7 +32,7 @@ namespace Salary.API.Core.Tools
             {
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
-                HttpContent httpContent = null;
+                HttpContent? httpContent = null;
                 if (method != HttpMethod.Get)
                 {
                     httpContent = new StringContent(JsonSerializer.Serialize(Body), Encoding.UTF8);
@@ -71,7 +71,7 @@ namespace Salary.API.Core.Tools
                 }
 
 
-                HttpResponseMessage response = null;
+                HttpResponseMessage? response = null;
                 for (var i = 1; i <= retryCount; i++)
                 {
                     if (method == HttpMethod.Post)
@@ -82,13 +82,17 @@ namespace Salary.API.Core.Tools
                     {
                         response = await httpClient.GetAsync(ServiceURL);
                     }
-
+                    if(response == null)
+                    {
+                        throw new Exception("Response is null");
+                    }    
                     if (response.IsSuccessStatusCode)
                     {
                         break;
                     }
                 }
-
+                if (response == null)
+                    throw new Exception("response is null");
                 string responseContent = await response.Content.ReadAsStringAsync();
 
                 return (response, responseContent);
@@ -108,6 +112,8 @@ namespace Salary.API.Core.Tools
         public static void saveAs(Resources.FileAttachment file, string AttachmentPath)
         {
             var dir = Path.GetDirectoryName(AttachmentPath);
+            if (dir == null)
+                throw new Exception("Directory is null");
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
             File.WriteAllBytes(AttachmentPath, file.AttachmentData);

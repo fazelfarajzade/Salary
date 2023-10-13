@@ -1,6 +1,6 @@
-﻿using Salary.API.Core.Entities;
+﻿using Dapper.Contrib.Extensions;
+using Salary.API.Core.Entities;
 using Salary.API.Core.Repository.Interfaces;
-using Dapper.Contrib.Extensions;
 using System.Data;
 
 namespace Salary.API.Core.Repository
@@ -31,7 +31,7 @@ namespace Salary.API.Core.Repository
                 return credits.ToList();
             }
         }
-        public async Task<int> InsertCredit(Credit credit, IDbTransaction transaction = null)
+        public async Task<int> InsertCredit(Credit credit, IDbTransaction? transaction = null)
         {
             //var query = "SELECT * FROM Salaries";
             using (var connection = _context.CreateConnection())
