@@ -49,7 +49,7 @@ namespace Salary.API.Controllers
         {
             try
             {
-                payment.PaymentDateTime = DateTime.Now;
+                //payment.PaymentDateTime = DateTime.Now;
                 var paymentId = await _paymentRepo.InsertPayment(payment);
                 return Ok(paymentId);
             }

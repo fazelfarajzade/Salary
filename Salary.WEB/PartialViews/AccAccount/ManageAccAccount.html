@@ -27,7 +27,8 @@
     Salaries = null;
     showNavBar(root);
     var Months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
-
+    var today = new GregorianToSolar(0, 0, 0);
+    txtYear.value = today.gYear;
     //var filteredDebts = {};
     //var filteredPayments = {};
     function fillAccsTable() {
@@ -176,9 +177,29 @@
                 return x;
             });
 
-            var gridObj = new DataGrid(accs, mapping, {}, {}, tr => {
-                selectedRowJSON = JSON.parse(tr.getAttribute('jsondata'));
-            });
+            
+            var gridObj = new DataGrid(
+                accs,
+                mapping,
+                {
+                    onCreateTr: (tr, acc) => {
+                        //debugger;
+                        if (today.gMonth == (acc.month - 1) && today.gYear == acc.year) {
+                            
+                            tr.style.fontSize = '18px';
+                        }
+                        else {
+                            tr.style.fontSize = '12px';
+                            tr.style.filter = 'blur(1px) opacity(0.7)';
+                        }
+                        return tr;
+                    }
+                },
+                {},
+                tr => {
+                    selectedRowJSON = JSON.parse(tr.getAttribute('jsondata'));
+                }
+            );
             dvAccList.appendChild(gridObj.getTable());
         } else {
             dvAccList.innerHTML = "حقوق کاربر مشخص نشده است.";

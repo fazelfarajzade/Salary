@@ -7,6 +7,7 @@
     // options.order;
     // options.identifier;
     // options.getExtendedData
+    // options.onCreateTr
     _this.jsonData = {};
     _this.appendTable = function (parent, newData) {
         var newTbl;
@@ -260,7 +261,9 @@
                 callback(tr);
             }
         }
-        
+        if (options.onCreateTr) {
+            tr = options.onCreateTr(tr, row);
+        }
         return tr;
     }
 }
