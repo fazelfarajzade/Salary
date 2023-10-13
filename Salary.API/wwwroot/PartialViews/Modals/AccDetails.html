@@ -1,5 +1,5 @@
 ﻿<div id="dialogPartial-AccDetails" class="dialogPartial">
-    <h2 id="hTitle"></h2>
+    <h3 id="hTitle"></h3>
     <h3>هزینه ها</h3>
     <div id="dvDebts"></div>
     <h3>اضافه پرداختی ها</h3>
@@ -44,27 +44,30 @@
             // Debts
             const debtMapping = {
                 debtId: "شناسه",
-                description: "شرح",
-                debtPersianName: "نوع",
+                debtDate: "تاریخ",
                 amountStr: "مبلغ",
+                debtPersianName: "نوع",
+                description: "شرح",
             }
             const gridDebtObj = new DataGrid(thisDialogData.debts, debtMapping, {}, {}, tr => { });
             dvDebts.appendChild(gridDebtObj.getTable());
             // Credits
             const creditMapping = {
                 creditId: "شناسه",
-                description: "شرح",
-                creditPersianName: "نوع",
+                creditDateTime: "تاریخ",
                 amountStr: "مبلغ",
+                creditPersianName: "نوع",
+                description: "شرح",
             }
             const gridCreditObj = new DataGrid(thisDialogData.credits, creditMapping, {}, {}, tr => { });
             dvCredits.appendChild(gridCreditObj.getTable());
             // Payments
             const paymentMapping = {
                 paymentId: "شناسه",
-                description: "شرح",
-                paymentPersianName: "نوع",
+                paymentDateTime: "تاریخ",
                 amountStr: "مبلغ",
+                paymentPersianName: "نوع",
+                description: "شرح",
             }
             const gridPaymentObj = new DataGrid(thisDialogData.payments, paymentMapping, {}, {}, tr => { });
             dvPayments.appendChild(gridPaymentObj.getTable());

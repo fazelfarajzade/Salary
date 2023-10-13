@@ -13,6 +13,10 @@
             <td>
                 <input dir="ltr" type="tel" id="txtAmount" class="formElement" />
             </td>
+            <td class="labelCell">تاریخ پرداخت</td>
+            <td>
+                <input dir="ltr" type="tel" id="txtPaymentDateTime" class="formElement" />
+            </td>
         </tr>
         <tr>
             <td class="labelCell">توضیحات</td>
@@ -33,9 +37,11 @@
             dvDataList = root.querySelector('#dvDataList'),
             ddlType = root.querySelector('#ddlType'),
             txtAmount = root.querySelector('#txtAmount'),
+            txtPaymentDateTime = root.querySelector('#txtPaymentDateTime'),
             txtDesc = root.querySelector('#txtDesc'),
             btnSavePayment = root.querySelector('#btnSavePayment');
         txtAmount.toMoney();
+        txtPaymentDateTime.datePeaker();
 
         const thisDialogData = { ...DialogData };
 
@@ -47,6 +53,10 @@
                 }
                 if (!txtAmount.value) {
                     alert("مبلغ پرداخت را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+                    return reject();
+                }
+                if (!txtPaymentDateTime.value) {
+                    alert("تاریخ پرداخت را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtPaymentDateTime.focus(); } });
                     return reject();
                 }
                 const amount = parseInt(txtAmount.value.replaceAll(",", ""));
@@ -62,6 +72,7 @@
                     PaymentMonth: thisDialogData.month,
                     Type: ddlType.value,
                     Amount: amount,
+                    PaymentDateTime: txtPaymentDateTime.value,
                     Description: txtDesc.value,
                 }
                 return resolve(data);
@@ -89,18 +100,19 @@
             btnSavePayment.onclick = () => {
                 save();
             }
-            var focusOrder = [ddlType, txtAmount, txtDesc, btnSavePayment];
+            var focusOrder = [ddlType, txtAmount, txtPaymentDateTime, txtDesc, btnSavePayment];
             ApplyFocusOnKeyPress(focusOrder);
         }
-        txtAmount.value = thisDialogData.payable;
+        txtAmount.value = (thisDialogData.payable || 0).toString().toMoney();
         txtDesc.value = `پرداختی ${thisDialogData.monthStr} سال ${thisDialogData.year}`;
         populateAddPayment();
 
         var mapping = {
             paymentId: "شناسه",
+            amountStr: "مبلغ",
+            paymentDateTime: "تاریخ",
             description: "شرح",
             paymentPersianName: "نوع",
-            amountStr: "مبلغ",
             actions: "عملیات",
         }
         var gridData = thisDialogData.payments.map(x => {

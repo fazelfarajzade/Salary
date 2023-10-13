@@ -24,7 +24,7 @@ namespace Salary.API.Controllers
                 //    PageMargins = { Left = 5, Bottom = 5, Right = 5, Top = 5 },
                 //    //Model = reg
                 //};
-                return report;
+                return Ok();
             }
             catch (Exception ex)
             {

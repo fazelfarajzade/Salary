@@ -18,6 +18,7 @@ namespace Salary.API.Core.Entities
         [Required]
         public CreditTypes Type { get; set; }
         public string? Description { get; set; }
+        public DateTime CreditDateTime { get; set; }
         public DateTime RegDate { get; set; }
         [Required]
         public int UserId { get; set; }

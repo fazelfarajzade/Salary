@@ -251,6 +251,18 @@
                 Debts = res[2];
                 Credits = res[3];
                 Loans = res[4];
+                try {
+                    Payments.sort((a, b) => {
+                        return (a.paymentDateTime || "").replaceAll("/", "") - (b.paymentDateTime || "").replaceAll("/", "");
+                    });
+                    Debts.sort((a, b) => {
+                        return (a.debtDate || "").replaceAll("/", "") - (b.debtDate || "").replaceAll("/", "");
+                    });
+                    Credits.sort((a, b) => {
+                        return (a.creditDateTime || "").replaceAll("/", "") - (b.creditDateTime || "").replaceAll("/", "");
+                    });
+                }
+                catch { }
                 fillAccsTable();
             });
     }

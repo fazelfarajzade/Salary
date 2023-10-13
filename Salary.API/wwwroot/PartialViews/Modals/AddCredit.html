@@ -13,6 +13,10 @@
             <td>
                 <input dir="ltr" type="tel" id="txtAmount" class="formElement" />
             </td>
+            <td class="labelCell">تاریخ</td>
+            <td>
+                <input dir="ltr" type="tel" id="txtCreditDateTime" class="formElement" />
+            </td>
         </tr>
         <tr>
             <td class="labelCell">توضیحات</td>
@@ -33,10 +37,12 @@
             dvDataList = root.querySelector('#dvDataList'),
             ddlType = root.querySelector('#ddlType'),
             txtAmount = root.querySelector('#txtAmount'),
+            txtCreditDateTime = root.querySelector('#txtCreditDateTime'),
             txtDesc = root.querySelector('#txtDesc'),
             btnSaveCredit = root.querySelector('#btnSaveCredit');
 
         txtAmount.toMoney();
+        txtCreditDateTime.datePeaker();
 
         const thisDialogData = { ...DialogData };
 
@@ -50,6 +56,10 @@
                     alert("مبلغ اضافه پرداختی را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
                     return reject();
                 }
+                if (!txtCreditDateTime.value) {
+                    alert("تاریخ اضافه پرداختی را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtCreditDateTime.focus(); } });
+                    return reject();
+                }
 
 
                 var data = {
@@ -58,6 +68,7 @@
                     CreditMonth: thisDialogData.month,
                     Type: ddlType.value,
                     Amount: parseInt(txtAmount.value.replaceAll(",", "")),
+                    CreditDateTime: txtCreditDateTime.value,
                     Description: txtDesc.value,
                 }
                 return resolve(data);
@@ -85,7 +96,7 @@
             btnSaveCredit.onclick = () => {
                 save();
             }
-            var focusOrder = [ddlType, txtAmount, txtDesc, btnSaveCredit];
+            var focusOrder = [ddlType, txtAmount, txtCreditDateTime, txtDesc, btnSaveCredit];
             ApplyFocusOnKeyPress(focusOrder);
         }
         txtDesc.value = `اضافه پرداختی ${thisDialogData.monthStr} سال ${thisDialogData.year}`;
@@ -96,6 +107,7 @@
             description: "شرح",
             creditPersianName: "نوع",
             amountStr: "مبلغ",
+            creditDateTime: "تاریخ",
             actions: "عملیات",
         }
         var gridData = thisDialogData.credits.map(x => {
