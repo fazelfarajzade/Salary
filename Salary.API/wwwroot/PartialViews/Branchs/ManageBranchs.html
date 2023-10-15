@@ -55,7 +55,7 @@
     }
     function sendDeleteBranchRequest() {
         var Branch = selectedRowJSON;
-        var createRequest = callService("Branch/DeleteBranch", { BranchID: Branch.branchId });
+        var createRequest = callService("Branchs/" + Branch.branchId , {}, 'delete');
         createRequest.then(res => {
             alert("شعبه انتخابی حذف شد.", "عملیات موفق"
                 , {
@@ -71,7 +71,7 @@
             } else {
                 alert(err, "خطا", { type: "error" });
             }
-        });New
+        });
     }
     function deleteBranch() {
         alert(

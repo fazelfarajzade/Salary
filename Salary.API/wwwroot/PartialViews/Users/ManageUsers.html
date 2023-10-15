@@ -86,7 +86,7 @@
     }
     function sendDeleteUserRequest() {
         var User = selectedRowJSON;
-        var createRequest = callService("User/DeleteUser", { UserID: User.UserID });
+        var createRequest = callService("Users/" + User.userId, {}, "delete");
         createRequest.then(res => {
             alert("کاربر انتخابی حذف شد.", "عملیات موفق"
                 , {
@@ -102,7 +102,7 @@
             } else {
                 alert(err, "خطا", { type: "error" });
             }
-        });New
+        });
     }
     function deleteUser() {
         alert(
