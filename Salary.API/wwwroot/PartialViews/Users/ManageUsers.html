@@ -7,6 +7,11 @@
         </div>
     </div>
     <div class="pageContent">
+        <div>
+            <select id="ddlBranch" class="formElement">
+                <option value="">همه شعب</option>
+            </select>
+        </div>
         <div id="dvUsersList"></div>
         <div class="inlineButtons">
             <button class="formElement disabledBox edit" id="btnEditUser" onclick="editUser()">ویرایش کاربر</button>
@@ -19,6 +24,7 @@
     var selectedRowJSON;
     var root = document.querySelector('#partialviews-Users');
     var dvUsersList = root.querySelector('#dvUsersList'),
+        ddlBranch = root.querySelector('#ddlBranch'),
         btnEditUser = root.querySelector('#btnEditUser'),
         btnDeleteUser = root.querySelector('#btnDeleteUser'),
         btnAddUser = root.querySelector('#btnAddUser'),
@@ -72,8 +78,12 @@
             dvUsersList.innerHTML = " کاربری قبلا ایجاد نشده است.";
         }
     }
-    function populateUsers(users) {
+    function populateUsers(users, branchs) {
         Users = users;
+        fillDDL(ddlBranch, branchs, "branchName", "branchId");
+        ddlBranch.addEventListener("change", () => {
+            fillUsersTable(ddlBranch.value ? Users.filter(x => x.branchId == parseInt(ddlBranch.value) ) : Users);
+        })
         fillUsersTable(Users);
     }
 
@@ -117,8 +127,8 @@
             }
         );
     }
-    callService("Users", {}, "get").then(users => {
-        populateUsers(users);
+    callServices(["Users", "Branchs"], [{}, {}], "get").then(res => {
+        populateUsers(res[0], res[1]);
     });
     
 </script>
