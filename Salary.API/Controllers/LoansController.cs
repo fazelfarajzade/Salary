@@ -51,7 +51,7 @@ namespace Salary.API.Controllers
                 return BadRequest("اقساط وام باید تا انتهای سال جاری پرداخت شوند. در نتیجه تعداد اقساط نمی تواند بیش از " + (12 - loan.Month) + " باشد.");
 
             var installments = new List<Debt>();
-            for(var i = loan.Month + 1; i <= 12; i++)
+            for(var i = loan.Month + 1; i <= (loan.Month + loan.NumberOfInstallments); i++)
             {
                 installments.Add(new Debt
                 {

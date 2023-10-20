@@ -41,7 +41,7 @@ function showDialog(dataSource, title = "", options = {}) {
     options.dialogWidth = options.dialogWidth || "90%";
 
     var dialog = document.getElementById('dvDialog').cloneNode(true);
-    var container = document.querySelector('#dvContent .page .pageContent') || document.querySelector('#dvContent');
+    var container = document.body || document.querySelector('#dvContent');
     //var container = document.querySelector('#dvContent');
     container.appendChild(dialog);
     dialogs.push(dialog);

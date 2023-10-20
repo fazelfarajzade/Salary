@@ -87,7 +87,7 @@ namespace Salary.API.Controllers
                 if (deleted)
                     return Ok();
                 else
-                    return BadRequest("هیچ هزینه ای حذف نشد.");
+                    return BadRequest("هیچ کسوری حذف نشد.");
             }
             catch (Exception ex)
             {

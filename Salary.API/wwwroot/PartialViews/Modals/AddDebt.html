@@ -2,7 +2,7 @@
     <div id="dvDataList"></div>
     <table>
         <tr>
-            <td class="labelCell">نوع هزینه:</td>
+            <td class="labelCell">نوع کسور:</td>
             <td>
                 <select type="text" id="ddlType" class="formElement">
                     <option value="FOOD" selected>غذا</option>
@@ -50,22 +50,22 @@
         function getData() {
             return new Promise((resolve, reject) => {
                 if (!ddlType.value) {
-                    alert("نوع هزینه را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { ddlType.focus(); } });
+                    alert("نوع کسور را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { ddlType.focus(); } });
                     return reject();
                 }
                 if (!txtAmount.value) {
-                    alert("مبلغ هزینه را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+                    alert("مبلغ کسور را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
                     return reject();
                 }
                 if (!txtDebtDate.value) {
-                    alert("تاریخ هزینه را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtDebtDate.focus(); } });
+                    alert("تاریخ کسور را وارد کنید", "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtDebtDate.focus(); } });
                     return reject();
                 }
                 const amount = parseInt(txtAmount.value.replaceAll(",", ""));
-                if (amount > thisDialogData.payable) {
-                    alert(`مبلغ هزینه نمی تواند بیشتر از ${thisDialogData.payable} ریال باشد`, "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
-                    return reject();
-                }
+                //if (amount > thisDialogData.payable) {
+                //    alert(`مبلغ کسور نمی تواند بیشتر از ${thisDialogData.payable} ریال باشد`, "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+                //    return reject();
+                //}
 
 
                 var data = {
@@ -88,7 +88,7 @@
             }
             var createRequest = callService("Debts", data, "post");
             createRequest.then(res => {
-                notify(`هزینه ثبت شد`, "success");
+                notify(`کسور ثبت شد`, "success");
                 if (thisDialogData.oncloseCallBack)
                     thisDialogData.oncloseCallBack(res);
                 closeDialog();
@@ -105,7 +105,7 @@
             var focusOrder = [ddlType, txtAmount, txtDebtDate, txtDesc, btnSaveDebt];
             ApplyFocusOnKeyPress(focusOrder);
         }
-        txtDesc.value = `هزینه ${thisDialogData.monthStr} سال ${thisDialogData.year}`;
+        txtDesc.value = `کسور ${thisDialogData.monthStr} سال ${thisDialogData.year}`;
         populateAddDebt();
 
         var mapping = {

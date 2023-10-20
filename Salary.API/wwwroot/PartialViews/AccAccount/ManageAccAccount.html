@@ -102,6 +102,11 @@
                             x.paymentPersianName = getPaymentTypePersianName(x.type);
                             return x;
                         });
+                        let filteredLoans = Loans.filter(l => l.year == year && l.month == month);
+                        filteredLoans = filteredLoans.map(x => {
+                            x.amountStr = x.amount.toString().toMoney();
+                            return x;
+                        });
                         accs.push(
                             {
                                 year: year,
@@ -112,6 +117,7 @@
                                 debts: filteredDebts,
                                 credits: filteredCredits,
                                 payments: filteredPayments,
+                                loans: filteredLoans,
                                 userId: document.params.user.userId,
                                 salaryAmount: salary.amount,
                                 actions: ""
@@ -141,7 +147,7 @@
 
                 var btnManageDebts = document.createElement("button");
                 btnManageDebts.className = "formElement";
-                btnManageDebts.innerHTML = "مدیریت هزینه";
+                btnManageDebts.innerHTML = "مدیریت کسورات";
                 parent.appendChild(btnManageDebts);
                 
                 var btnManageCredits = document.createElement("button");
@@ -169,7 +175,7 @@
                     x.oncloseCallBack = () => {
                         search(x.year);
                     }
-                    showDialog("PartialViews/Modals/AddDebt.html", "مدیریت هزینه", { url: true })
+                    showDialog("PartialViews/Modals/AddDebt.html", "مدیریت کسورات", { url: true })
                 });
                 btnManageCredits.addEventListener("click", () => {
                     //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
@@ -181,7 +187,6 @@
                 });
                 btnManageLoans.addEventListener("click", () => {
                     //loadPartialView(PartialViewTemplates.AccAccount.ManageAccAccount, { user: x });
-                    x.Loans = Loans;
                     DialogData = x;
                     x.oncloseCallBack = () => {
                         search(x.year);
@@ -212,7 +217,7 @@
                         }
                         else {
                             tr.style.fontSize = '12px';
-                            tr.style.filter = 'blur(1px) opacity(0.7)';
+                            tr.style.filter = 'opacity(0.6) grayscale(0.8)';
                         }
                         return tr;
                     }

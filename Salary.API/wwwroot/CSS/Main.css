@@ -402,7 +402,7 @@ table {
 }
 /*modal dialog*/
 .modal {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
@@ -430,7 +430,7 @@ table {
     outline: 0;
     -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
     box-shadow: 0 3px 9px rgba(0,0,0,.5);
-    transform: translate(0, 100px);
+    transform: translate(0, 50px);
     width: 90%;
     margin: auto;
     pointer-events: auto;

@@ -99,7 +99,7 @@
             description: "توضیحات",
             actions: "عملیات",
         }
-        var gridData = thisDialogData.Loans.map(x => {
+        var gridData = thisDialogData.loans.map(x => {
             var parent = document.createElement("div");
 
 
@@ -126,7 +126,6 @@
 
             x.actions = parent;
 
-            x.amountStr = x.amount.toString().toMoney();
             return x;
         });
         var gridObj = new DataGrid(gridData, mapping, {}, {}, tr => { });
