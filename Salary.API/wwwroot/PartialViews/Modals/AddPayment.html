@@ -1,4 +1,4 @@
-﻿<div id="dialogPartial-AddPayment" class="dialogPartial">
+﻿﻿<div id="dialogPartial-AddPayment" class="dialogPartial">
     <div id="dvDataList"></div>
     <table>
         <tr>
@@ -60,10 +60,10 @@
                     return reject();
                 }
                 const amount = parseInt(txtAmount.value.replaceAll(",", ""));
-                if (amount > thisDialogData.payable) {
-                    alert(`مبلغ پرداختی نمی تواند بیشتر از ${thisDialogData.payable} ریال باشد`, "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
-                    return reject();
-                }
+//                if (amount > thisDialogData.payable) {
+//                    alert(`مبلغ پرداختی نمی تواند بیشتر از ${thisDialogData.payable} ریال باشد`, "خطا در ورود اطلاعات", { type: "warning", confirmCallBack: () => { txtAmount.focus(); } });
+//                    return reject();
+//                }
 
 
                 var data = {
